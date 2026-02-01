@@ -12,7 +12,7 @@ CREATE TABLE "accounts" (
 CREATE TABLE "refresh_tokens" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
-	"token_hash" text NOT NULL,
+	"token" text NOT NULL,
 	"user_agent" text,
 	"ip_address" varchar(45),
 	"expires_at" timestamp NOT NULL,

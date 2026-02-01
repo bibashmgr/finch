@@ -1,5 +1,5 @@
 {
-  "id": "db0bd450-2eb2-4916-8ef9-da6b64d10c67",
+  "id": "98fd55eb-90f9-45b6-b355-1ae575d918a5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -97,8 +97,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "token_hash": {
-          "name": "token_hash",
+        "token": {
+          "name": "token",
           "type": "text",
           "primaryKey": false,
           "notNull": true
