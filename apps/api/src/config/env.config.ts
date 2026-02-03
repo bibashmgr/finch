@@ -1,5 +1,5 @@
-import { ConfigModuleOptions } from "@nestjs/config";
 import { z } from "zod";
+import { ConfigModuleOptions } from "@nestjs/config";
 
 export const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]),
@@ -57,7 +57,15 @@ export const envSchema = z.object({
     message: "EMAIL_FROM must be a valid email address",
   }),
 
+  GOOGLE_CLIENT_ID: z.string(),
+
+  GOOGLE_CLIENT_SECRET: z.string(),
+
   ALLOWED_ORIGINS: z.string(),
+
+  API_BASE_URL: z.url({
+    message: "API_BASE_URL must be a valid url",
+  }),
 
   CLIENT_BASE_URL: z.url({
     message: "CLIENT_BASE_URL must be a valid url",
