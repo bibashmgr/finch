@@ -9,20 +9,21 @@ export const metadata: Metadata = {
 
 export default function NotFoundPage() {
   return (
-    <section className="w-full min-h-dvh flex flex-col justify-center items-center gap-8 px-6">
-      <div className="text-center">
-        <h1 className="text-8xl font-bold text-foreground">404</h1>
-        <p className="text-lg font-normal text-muted-foreground">
-          This page is missing or you <br />
-          assembled incorrect link.
-        </p>
-      </div>
+    <main className="w-full min-h-dvh flex flex-col justify-center items-center p-4">
+      <div className="max-w-sm flex flex-col gap-6 items-center justify-center">
+        <div className="text-center space-y-2">
+          <h1 className="text-8xl font-bold text-foreground">404</h1>
+          <p className="text-base font-normal text-muted-foreground">
+            This page is missing or you <br /> assembled incorrect link.
+          </p>
+        </div>
 
-      <Link prefetch={false} href="/profile">
-        <Button variant="outline" className="cursor-pointer">
-          Back to Website
-        </Button>
-      </Link>
-    </section>
+        <Link prefetch={false} href="/">
+          <Button variant="outline" className="cursor-pointer">
+            Back to Website
+          </Button>
+        </Link>
+      </div>
+    </main>
   );
 }

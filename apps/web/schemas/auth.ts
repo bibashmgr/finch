@@ -21,4 +21,36 @@ const loginWithEmailFormSchema = z.object({
 
 type LoginWithEmailFormValues = z.infer<typeof loginWithEmailFormSchema>;
 
-export { loginWithEmailFormSchema, type LoginWithEmailFormValues };
+type LoginWithEmailInput = LoginWithEmailFormValues;
+
+const verifyEmailFormSchema = z.object({
+  code: z
+    .string({
+      error: "Please enter verification code",
+    })
+    .nonempty({
+      error: "Please enter verification code",
+    })
+    .length(6, {
+      error: "Verification code must be 6 characters long",
+    }),
+});
+
+type VerifyEmailFormValues = z.infer<typeof verifyEmailFormSchema>;
+
+const verifyEmailInputSchema = z.object({
+  email: z.string(),
+  code: z.string(),
+});
+
+type VerifyEmailInput = z.infer<typeof verifyEmailInputSchema>;
+
+export {
+  loginWithEmailFormSchema,
+  type LoginWithEmailFormValues,
+  type LoginWithEmailInput,
+  verifyEmailFormSchema,
+  type VerifyEmailFormValues,
+  verifyEmailInputSchema,
+  type VerifyEmailInput,
+};
