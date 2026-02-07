@@ -91,7 +91,7 @@ export class MailService {
     const subject = "Email Verification";
 
     const expirationMins =
-      parseInt(ms(this.configService.get("OTP_EXPIRES_IN"))) / 1000;
+      parseInt(ms(this.configService.get("OTP_EXPIRES_IN"))) / 60000;
     const html = this.generateHtmlContent("Verfiy Email", code, expirationMins);
 
     await this.sendMail(to, subject, html);

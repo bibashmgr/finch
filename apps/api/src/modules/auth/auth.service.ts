@@ -1,102 +1,65 @@
-import ms from "ms";
-import * as bcrypt from "bcrypt";
-import { customAlphabet } from "nanoid";
-import { ConfigService } from "@nestjs/config";
-import { and, eq, gt, isNull } from "drizzle-orm";
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { Transactional, TransactionHost } from "@nestjs-cls/transactional";
+import { Transactional } from "@nestjs-cls/transactional";
+import { Injectable, NotFoundException } from "@nestjs/common";
 
-import {
-  accountsTable,
-  usersTable,
-  verificationCodesTable,
-} from "@/modules/db/schema";
-import { Env } from "@/config/env.config";
+import { usersTable } from "@/modules/db/schema";
+import { OtpService } from "@/modules/otp/otp.service";
 import { MailService } from "@/modules/mail/mail.service";
-import { DbTransactionAdapter } from "@/modules/db/client";
 import { TokenService } from "@/modules/token/token.service";
+import { UsersRepository } from "@/modules/user/user.respository";
+import { AccountRepository } from "@/modules/account/account.repository";
 
 @Injectable()
 export class AuthService {
   constructor(
-    private configService: ConfigService<Env, true>,
-    private txHost: TransactionHost<DbTransactionAdapter>,
+    private otpService: OtpService,
     private mailService: MailService,
     private tokenService: TokenService,
+    private userRepository: UsersRepository,
+    private accountRepository: AccountRepository,
   ) {}
 
   @Transactional()
   async loginWithEmail(email: string) {
-    const nanoid = customAlphabet("1234567890", 6);
-    const code = nanoid();
-    const codeHash = await bcrypt.hash(code, 10);
-
-    const expiresAt = new Date(
-      Date.now() + ms(this.configService.get("OTP_EXPIRES_IN")),
-    );
-
-    await this.txHost.tx.insert(verificationCodesTable).values({
-      codeHash,
-      email,
-      expiresAt,
-    });
-
+    const code = await this.otpService.saveOtpCode(email);
     await this.mailService.sendEmailVerificationMail(email, code);
-
     return { message: "Verification code sent successfully" };
   }
 
   @Transactional()
   async verifyEmail(email: string, code: string) {
-    const now = new Date();
+    await this.otpService.verifyOtpCode(email, code);
 
-    const records = await this.txHost.tx
-      .select()
-      .from(verificationCodesTable)
-      .where(
-        and(
-          eq(verificationCodesTable.email, email),
-          isNull(verificationCodesTable.consumedAt),
-          gt(verificationCodesTable.expiresAt, now),
-        ),
-      );
+    let user: typeof usersTable.$inferSelect;
+    let account = await this.accountRepository.findByProvider("email", email);
 
-    let record: (typeof records)[number] | undefined;
+    if (!account) {
+      user = await this.userRepository.findByEmail(email);
 
-    for (const r of records) {
-      const isMatch = await bcrypt.compare(code, r.codeHash);
-      if (isMatch) {
-        record = r;
-        break;
+      if (!user) {
+        user = await this.userRepository.create({
+          email,
+          name: email.split("@")[0],
+        });
       }
-    }
 
-    if (!record) throw new UnauthorizedException("Invalid verification code");
-
-    await this.txHost.tx
-      .update(verificationCodesTable)
-      .set({ consumedAt: now, updatedAt: now })
-      .where(eq(verificationCodesTable.id, record.id));
-
-    let user = await this.txHost.tx
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.email, email))
-      .then((r) => r[0]);
-
-    if (!user) {
-      [user] = await this.txHost.tx
-        .insert(usersTable)
-        .values({ email, name: email.split("@")[0] })
-        .returning();
-
-      await this.txHost.tx.insert(accountsTable).values({
+      await this.accountRepository.create({
         userId: user.id,
         provider: "email",
         providerAccountId: email,
       });
+    } else {
+      user = await this.userRepository.findById(account.userId);
     }
 
     return await this.tokenService.issueAuthTokens(user.id);
+  }
+
+  @Transactional()
+  async logoutUser(refreshToken: string | undefined) {
+    if (!refreshToken) {
+      throw new NotFoundException("Refresh token is not provided");
+    }
+
+    return await this.tokenService.revokeRefreshTokens(refreshToken);
   }
 }

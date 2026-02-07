@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 
 import { Env } from "@/config/env.config";
 import { TokenService } from "@/modules/token/token.service";
+import { TokenRepository } from "./token.repository";
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { TokenService } from "@/modules/token/token.service";
       inject: [ConfigService],
     }),
   ],
-  providers: [TokenService],
-  exports: [TokenService],
+  providers: [TokenService, TokenRepository],
+  exports: [TokenService, TokenRepository],
 })
 export class TokenModule {}

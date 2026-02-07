@@ -1,4 +1,5 @@
 import { Logger } from "nestjs-pino";
+import cookieParser from "cookie-parser";
 import { NestFactory } from "@nestjs/core";
 import { ConfigService } from "@nestjs/config";
 
@@ -16,6 +17,8 @@ async function bootstrap() {
   app.enableCors(corsConfig);
 
   app.useGlobalPipes(createValidationConfig());
+
+  app.use(cookieParser());
 
   const configService = app.get(ConfigService);
   const port = configService.get("PORT");

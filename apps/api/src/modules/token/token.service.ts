@@ -4,22 +4,19 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { eq } from "drizzle-orm";
 import { ConfigService } from "@nestjs/config";
 import { JwtService, JwtSignOptions } from "@nestjs/jwt";
-import { TransactionHost } from "@nestjs-cls/transactional";
 
 import { Env } from "@/config/env.config";
-import { refreshTokensTable } from "@/modules/db/schema";
-import { DbTransactionAdapter } from "@/modules/db/client";
 import { TokenEnum } from "@/modules/token/entities/token.enum";
+import { TokenRepository } from "@/modules/token/token.repository";
 
 @Injectable()
 export class TokenService {
   constructor(
     private configService: ConfigService<Env, true>,
     private jwtService: JwtService,
-    private txHost: TransactionHost<DbTransactionAdapter>,
+    private tokenRepository: TokenRepository,
   ) {}
 
   async generateToken(
@@ -34,22 +31,18 @@ export class TokenService {
     });
   }
 
-  async saveRefreshToken(token: string, userId: string) {
-    const expiresIn = this.configService.get("JWT_REFRESH_EXPIRES_IN");
-
-    const expiresAt = new Date(Date.now() + ms(expiresIn));
-    return await this.txHost.tx.insert(refreshTokensTable).values({
-      userId,
-      token,
-      expiresAt,
-    });
-  }
-
   async issueAuthTokens(userId: string) {
     const accessToken = await this.generateToken(
       userId,
       this.configService.get("JWT_ACCESS_EXPIRES_IN"),
       TokenEnum.ACCESS,
+    );
+
+    const refreshTokenExpiresIn = this.configService.get(
+      "JWT_REFRESH_EXPIRES_IN",
+    );
+    const refreshTokenExpiration = new Date(
+      Date.now() + ms(refreshTokenExpiresIn),
     );
 
     const refreshToken = await this.generateToken(
@@ -58,16 +51,18 @@ export class TokenService {
       TokenEnum.REFRESH,
     );
 
-    await this.saveRefreshToken(refreshToken, userId);
+    await this.tokenRepository.saveRefreshToken({
+      userId,
+      token: refreshToken,
+      expiresAt: refreshTokenExpiration,
+    });
 
     return { accessToken, refreshToken };
   }
 
-  async rotateRefreshTokens(token: string) {
+  async revokeRefreshTokens(token: string) {
     const existingRefreshToken =
-      await this.txHost.tx.query.refreshTokensTable.findFirst({
-        where: eq(refreshTokensTable.token, token),
-      });
+      await this.tokenRepository.findRefreshToken(token);
 
     if (!existingRefreshToken) {
       throw new NotFoundException("Refresh token not found");
@@ -81,10 +76,30 @@ export class TokenService {
       throw new UnauthorizedException("Refresh token already expired");
     }
 
-    await this.txHost.tx
-      .update(refreshTokensTable)
-      .set({ revokedAt: new Date(), updatedAt: new Date() })
-      .where(eq(refreshTokensTable.id, existingRefreshToken.id));
+    await this.tokenRepository.updateRefreshToken(existingRefreshToken.id, {
+      revokedAt: new Date(),
+    });
+  }
+
+  async rotateRefreshTokens(token: string) {
+    const existingRefreshToken =
+      await this.tokenRepository.findRefreshToken(token);
+
+    if (!existingRefreshToken) {
+      throw new NotFoundException("Refresh token not found");
+    }
+
+    if (existingRefreshToken.revokedAt) {
+      throw new UnauthorizedException("Refresh token already revoked");
+    }
+
+    if (existingRefreshToken.expiresAt < new Date()) {
+      throw new UnauthorizedException("Refresh token already expired");
+    }
+
+    await this.tokenRepository.updateRefreshToken(existingRefreshToken.id, {
+      revokedAt: new Date(),
+    });
 
     return await this.issueAuthTokens(existingRefreshToken.userId);
   }
