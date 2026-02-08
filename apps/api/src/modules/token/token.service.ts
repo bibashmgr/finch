@@ -81,7 +81,7 @@ export class TokenService {
     });
   }
 
-  async rotateRefreshTokens(token: string) {
+  async rotateRefreshTokens(token: string | undefined) {
     const existingRefreshToken =
       await this.tokenRepository.findRefreshToken(token);
 

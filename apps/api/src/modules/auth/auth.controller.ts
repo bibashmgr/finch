@@ -91,4 +91,22 @@ export class AuthController {
       message: "Logout successful",
     });
   }
+
+  @Public()
+  @Post("refresh")
+  @HttpCode(HttpStatus.OK)
+  async rotateRefreshTokens(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refreshToken = req.cookies["refresh_token"] as string | undefined;
+    const tokens = await this.tokenService.rotateRefreshTokens(refreshToken);
+
+    const cookieOptions = createCookieOptions();
+    res.cookie("access_token", tokens.accessToken, cookieOptions);
+    res.cookie("refresh_token", tokens.refreshToken, cookieOptions);
+    res.send({
+      message: "Refresh tokens successfully",
+    });
+  }
 }

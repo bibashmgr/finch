@@ -1,4 +1,5 @@
-import { Controller, Get } from "@nestjs/common";
+import { Request } from "express";
+import { Controller, Get, Req } from "@nestjs/common";
 
 import { UserService } from "@/modules/user/user.service";
 
@@ -9,5 +10,10 @@ export class UserController {
   @Get()
   findAll() {
     return this.userService.findAll();
+  }
+
+  @Get("me")
+  getProfile(@Req() req: Request) {
+    return req.user;
   }
 }
