@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/provider/theme-provider";
 import { StoreProvider } from "@/components/provider/store-provider";
 
 import "@repo/ui/globals.css";
+import { ProfileProvider } from "@/components/provider/profile-provider";
 
 const fontSans = Open_Sans({
   variable: "--font-sans",
@@ -39,7 +40,7 @@ export default function RootLayout({
       <body className={`${fontSans.variable} ${fontMono.variable}`}>
         <StoreProvider>
           <ThemeProvider>
-            {children}
+            <ProfileProvider>{children}</ProfileProvider>
             <Toaster position="top-center" />
           </ThemeProvider>
         </StoreProvider>

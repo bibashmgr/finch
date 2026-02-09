@@ -43,7 +43,7 @@ export type SiteConfig = {
 };
 
 const baseSiteConfig = {
-  name: "Finch - Finance Simplified",
+  name: "Finch",
   shortName: "Finch",
   description:
     "Track expenses, manage income, and plan budgets with Finch—a smart, easy-to-use web app for better personal finance management.",
