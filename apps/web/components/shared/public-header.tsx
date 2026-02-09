@@ -47,7 +47,7 @@ export function PublicHeader() {
           <h2 className="font-bold text-xl">FINCH</h2>
         </Link>
 
-        <div className="flex gap-1 items-center">
+        <div className="flex gap-2 items-center">
           <ThemeToggle />
 
           {profile ? (
