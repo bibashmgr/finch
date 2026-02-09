@@ -4,6 +4,7 @@ import { Courier_Prime, Open_Sans } from "next/font/google";
 import { siteConfig } from "@/constants/site-config";
 
 import { Toaster } from "@repo/ui/components/sonner";
+import { TooltipProvider } from "@repo/ui/components/tooltip";
 import { ThemeProvider } from "@/components/provider/theme-provider";
 import { StoreProvider } from "@/components/provider/store-provider";
 
@@ -40,7 +41,9 @@ export default function RootLayout({
       <body className={`${fontSans.variable} ${fontMono.variable}`}>
         <StoreProvider>
           <ThemeProvider>
-            <ProfileProvider>{children}</ProfileProvider>
+            <ProfileProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </ProfileProvider>
             <Toaster position="top-center" />
           </ThemeProvider>
         </StoreProvider>
