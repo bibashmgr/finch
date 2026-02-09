@@ -18,16 +18,13 @@ const profileSlice = createSlice({
   reducers: {
     setProfileInfo: (state, action: PayloadAction<User | null>) => {
       state.info = action.payload;
-
-      if (action.payload === null) {
-        state.isLoading = true;
-      } else {
-        state.isLoading = false;
-      }
+    },
+    setIsProfileLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
     },
   },
 });
 
-export const { setProfileInfo } = profileSlice.actions;
+export const { setProfileInfo, setIsProfileLoading } = profileSlice.actions;
 
 export default profileSlice.reducer;
