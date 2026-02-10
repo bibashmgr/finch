@@ -20,7 +20,7 @@ export function ProfileLinkSection() {
       {profileNavLinks.map((item) => {
         if (item.href) {
           return (
-            <Link key={item.title} href={item.href}>
+            <Link key={item.title} href={item.href} prefetch={false}>
               <div className="flex justify-between items-center gap-4 px-4 py-2">
                 <div className="flex items-center gap-4">
                   <div className="size-10 rounded-lg flex items-center justify-center bg-secondary">

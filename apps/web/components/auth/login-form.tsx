@@ -65,6 +65,7 @@ export function LoginForm({
           <div className="flex flex-col items-center gap-2 text-center">
             <Link
               href="/"
+              prefetch={false}
               className="flex flex-col items-center gap-2 font-medium"
             >
               <div className="flex size-8 items-center justify-center rounded-md">
