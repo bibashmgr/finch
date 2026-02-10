@@ -10,7 +10,8 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "preserveWatchOutput": true
   },
   "include": [
     "**/*.ts",
