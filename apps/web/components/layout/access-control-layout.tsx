@@ -34,7 +34,7 @@ export function AccessControlLayout({ children }: AccessControlLayout) {
           </p>
         </div>
 
-        <Link href="/login">
+        <Link href="/login" prefetch={false}>
           <Button variant="outline" className="cursor-pointer">
             Login
           </Button>
