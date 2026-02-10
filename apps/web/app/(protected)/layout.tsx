@@ -1,6 +1,7 @@
 import React from "react";
 
-import { AccessControlLayout } from "@/components/shared/access-control-layout";
+import { ProtectedBottomTab } from "@/components/shared/protected-bottom-tab";
+import { AccessControlLayout } from "@/components/layout/access-control-layout";
 
 export default function ProtectedLayout({
   children,
@@ -9,7 +10,10 @@ export default function ProtectedLayout({
 }) {
   return (
     <AccessControlLayout>
-      <div className="max-w-xl mx-auto">{children}</div>
+      <div className="max-w-xl mx-auto relative border">
+        {children}
+        <ProtectedBottomTab />
+      </div>
     </AccessControlLayout>
   );
 }
