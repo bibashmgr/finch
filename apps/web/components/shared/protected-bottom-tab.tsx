@@ -13,7 +13,7 @@ import {
 import { cn } from "@repo/ui/lib/utils";
 import { protectedNavLinks } from "@/constants/protected-nav-links";
 
-export default function ProtectedBottomNavbar() {
+export function ProtectedBottomTab() {
   const pathname = usePathname();
 
   return (
@@ -27,10 +27,10 @@ export default function ProtectedBottomNavbar() {
                   <div
                     className={cn(
                       "size-10 flex justify-center items-center rounded-lg hover:bg-secondary text-foreground",
+                      pathname === item.href &&
+                        "bg-secondary hover:bg-secondary/90",
                       item.isHighlighted &&
                         "bg-primary text-primary-foreground hover:bg-primary/90",
-                      pathname.startsWith(item.href) &&
-                        "bg-secondary hover:bg-secondary/90",
                     )}
                   >
                     <item.icon className="size-5" />
