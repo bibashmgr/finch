@@ -16,7 +16,7 @@ export function ProfileLinkSection() {
   }, []);
 
   return (
-    <section className="flex flex-col bg-card rounded-xl py-2">
+    <section className="flex flex-col bg-card rounded-xl py-2 border">
       {profileNavLinks.map((item) => {
         if (item.href) {
           return (
@@ -38,7 +38,7 @@ export function ProfileLinkSection() {
         return (
           <div
             key={item.title}
-            className="flex items-center gap-4  px-4 py-2"
+            className="flex items-center gap-4  px-4 py-2 cursor-pointer"
             onClick={() => handleLogoutDrawer(true)}
           >
             <div className="size-10 rounded-lg flex items-center justify-center bg-secondary">

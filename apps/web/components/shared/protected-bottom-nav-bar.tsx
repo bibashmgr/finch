@@ -18,7 +18,7 @@ export default function ProtectedBottomNavbar() {
 
   return (
     <nav className="fixed bottom-4 left-1/2 -translate-x-1/2">
-      <div className="bg-card flex gap-2 items-center justify-between w-fit px-2 py-2 rounded-xl">
+      <div className="bg-card border flex gap-2 items-center justify-between w-fit px-2 py-2 rounded-xl">
         {protectedNavLinks.map((item) => {
           return (
             <Link key={item.title} href={item.href} prefetch={false}>
