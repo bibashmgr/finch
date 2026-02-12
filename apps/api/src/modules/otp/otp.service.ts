@@ -2,8 +2,6 @@ import ms from "ms";
 import * as bcrypt from "bcrypt";
 import { customAlphabet } from "nanoid";
 import { ConfigService } from "@nestjs/config";
-import { and, eq, gt, isNull } from "drizzle-orm";
-import { TransactionHost } from "@nestjs-cls/transactional";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 
 import { Env } from "@/config/env.config";
