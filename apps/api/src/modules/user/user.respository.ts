@@ -44,7 +44,7 @@ export class UsersRepository {
   async update(
     id: string,
     payload: Partial<typeof usersTable.$inferInsert>,
-  ): Promise<typeof usersTable.$inferSelect> {
+  ): Promise<typeof usersTable.$inferSelect | undefined> {
     const [user] = await this.txHost.tx
       .update(usersTable)
       .set({ ...payload, updatedAt: new Date() })
