@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { ChevronLeftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { ChevronLeftIcon } from "lucide-react";
 
 type StackLayoutProps = {
   pageTitle: string;
@@ -11,12 +11,21 @@ type StackLayoutProps = {
   children: React.ReactNode;
 };
 
-export function StackLayout({ pageTitle, action, children }: StackLayoutProps) {
+export function StackLayout({
+  pageTitle,
+  action,
+  fallbackUrl,
+  children,
+}: StackLayoutProps) {
   const router = useRouter();
 
   const handleBackButton = React.useCallback(() => {
-    router.back();
-  }, []);
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.back();
+    } else {
+      router.push(fallbackUrl);
+    }
+  }, [router, fallbackUrl]);
 
   return (
     <div>
