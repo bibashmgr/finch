@@ -1,6 +1,6 @@
 import z from "zod";
 
-const loginWithEmailFormSchema = z.object({
+export const loginWithEmailFormSchema = z.object({
   email: z
     .string({
       error: "Please enter an email address",
@@ -19,11 +19,9 @@ const loginWithEmailFormSchema = z.object({
     ),
 });
 
-type LoginWithEmailFormValues = z.infer<typeof loginWithEmailFormSchema>;
+export type LoginWithEmailFormValues = z.infer<typeof loginWithEmailFormSchema>;
 
-type LoginWithEmailInput = LoginWithEmailFormValues;
-
-const verifyEmailFormSchema = z.object({
+export const verifyEmailFormSchema = z.object({
   code: z
     .string({
       error: "Please enter verification code",
@@ -36,21 +34,4 @@ const verifyEmailFormSchema = z.object({
     }),
 });
 
-type VerifyEmailFormValues = z.infer<typeof verifyEmailFormSchema>;
-
-const verifyEmailInputSchema = z.object({
-  email: z.string(),
-  code: z.string(),
-});
-
-type VerifyEmailInput = z.infer<typeof verifyEmailInputSchema>;
-
-export {
-  loginWithEmailFormSchema,
-  type LoginWithEmailFormValues,
-  type LoginWithEmailInput,
-  verifyEmailFormSchema,
-  type VerifyEmailFormValues,
-  verifyEmailInputSchema,
-  type VerifyEmailInput,
-};
+export type VerifyEmailFormValues = z.infer<typeof verifyEmailFormSchema>;
