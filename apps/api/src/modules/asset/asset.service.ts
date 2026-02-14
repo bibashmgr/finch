@@ -27,8 +27,8 @@ export class AssetService {
     return asset;
   }
 
-  async deleteAssetByUrl(url: string) {
-    const asset = await this.assetRepository.findByUrl(url);
+  async deleteAsset(id: string) {
+    const asset = await this.assetRepository.findById(id);
 
     if (!asset) {
       throw new NotFoundException("Asset not found");

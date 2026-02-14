@@ -9,6 +9,7 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { DbModule } from "@/modules/db/db.module";
 import { UserModule } from "@/modules/user/user.module";
 import { AuthModule } from "@/modules/auth/auth.module";
+import { AssetModule } from "@/modules/asset/asset.module";
 import { HealthModule } from "@/modules/health/health.module";
 
 import { createClsConfig } from "@/config/cls.config";
@@ -42,6 +43,7 @@ import { createThrollerConfig } from "@/config/throttler.config";
     }),
     HealthModule,
     AuthModule,
+    AssetModule,
     UserModule,
   ],
   controllers: [],

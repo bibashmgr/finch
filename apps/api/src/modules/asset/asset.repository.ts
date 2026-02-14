@@ -17,6 +17,15 @@ export class AssetRepository {
     return asset;
   }
 
+  async findById(id: string) {
+    const [asset] = await this.txHost.tx
+      .select()
+      .from(assetsTable)
+      .where(eq(assetsTable.id, id))
+      .limit(1);
+    return asset;
+  }
+
   async findByUrl(url: string) {
     const [asset] = await this.txHost.tx
       .select()
