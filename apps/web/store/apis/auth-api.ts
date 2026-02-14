@@ -1,6 +1,6 @@
-import { EmptyResponse } from "@/schemas/response";
+import { EmptyResponse } from "@/types/response";
 import { apiSlice } from "@/store/slices/api-slice";
-import { LoginWithEmailInput, VerifyEmailInput } from "@/schemas/auth";
+import { LoginWithEmailInput, VerifyEmailInput } from "@/types/auth";
 
 const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

@@ -1,15 +1,28 @@
-import { User } from "@/schemas/user";
 import { apiSlice } from "@/store/slices/api-slice";
+import { UpdateUserInput, User } from "@/types/user";
 
 const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getProfile: builder.query<User, void>({
+    getMyProfile: builder.query<User, void>({
       query: () => ({
         url: "/users/me",
       }),
       providesTags: ["Profile"],
     }),
+
+    updateMyProfile: builder.mutation<User, UpdateUserInput>({
+      query: (body) => ({
+        url: "/users/me",
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Profile"],
+    }),
   }),
 });
 
-export const { useGetProfileQuery, useLazyGetProfileQuery } = userApi;
+export const {
+  useGetMyProfileQuery,
+  useLazyGetMyProfileQuery,
+  useUpdateMyProfileMutation,
+} = userApi;

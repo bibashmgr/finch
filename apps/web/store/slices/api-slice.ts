@@ -7,7 +7,7 @@ import {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
 
-import { ApiErrorResponse } from "@/schemas/response";
+import { ApiErrorResponse } from "@/types/response";
 
 const mutex = new Mutex();
 

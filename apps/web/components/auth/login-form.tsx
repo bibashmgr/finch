@@ -24,7 +24,6 @@ import {
   LoginWithEmailFormValues,
 } from "@/schemas/auth";
 import { cn } from "@repo/ui/lib/utils";
-import { ApiErrorResponse } from "@/schemas/response";
 import { useLoginWithEmailMutation } from "@/store/apis/auth-api";
 
 export function LoginForm({

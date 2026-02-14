@@ -2,16 +2,16 @@
 
 import React from "react";
 
-import { useAppDispatch } from "@/hooks/use-app-dispatch";
-import { useGetProfileQuery } from "@/store/apis/user-api";
 import {
   setIsProfileLoading,
   setProfileInfo,
 } from "@/store/slices/profile-slice";
+import { useAppDispatch } from "@/hooks/use-app-dispatch";
+import { useGetMyProfileQuery } from "@/store/apis/user-api";
 
 export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
-  const { data, isSuccess, isError } = useGetProfileQuery();
+  const { data, isSuccess, isError } = useGetMyProfileQuery();
 
   React.useEffect(() => {
     if (data && isSuccess) {
