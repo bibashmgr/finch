@@ -2,13 +2,13 @@ import React from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Settings - Finch",
+  title: "Report - Finch",
 };
 
-export default function SettingsPage() {
+export default function ReportPage() {
   return (
     <main className="w-full min-h-dvh flex justify-center items-center">
-      Settings
+      Report
     </main>
   );
 }
