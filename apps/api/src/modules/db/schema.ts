@@ -7,6 +7,8 @@ import {
   text,
   pgEnum,
   unique,
+  integer,
+  bigint,
 } from "drizzle-orm/pg-core";
 
 const usersTable = pgTable(
@@ -114,12 +116,12 @@ const assetsTable = pgTable(
 
     originalFilename: varchar("original_filename", { length: 255 }),
     format: varchar("format", { length: 50 }),
-    bytes: varchar("bytes", { length: 20 }),
-    width: varchar("width", { length: 10 }),
-    height: varchar("height", { length: 10 }),
+    bytes: bigint("bytes", { mode: "number" }),
+    width: integer("width"),
+    height: integer("height"),
     duration: varchar("duration", { length: 20 }),
 
-    url: text("secure_url").notNull(),
+    url: text("url").notNull(),
 
     deletedAt: timestamp("deleted_at"),
     createdAt: timestamp("created_at").defaultNow(),
