@@ -32,7 +32,7 @@ export class TokenRepository {
   ) {
     const [refreshToken] = await this.txHost.tx
       .update(refreshTokensTable)
-      .set({ ...payload, updatedAt: new Date() })
+      .set({ ...payload })
       .where(eq(refreshTokensTable.id, id))
       .returning();
     return refreshToken;

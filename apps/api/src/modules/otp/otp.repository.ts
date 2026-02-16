@@ -41,7 +41,7 @@ export class OtpRepository {
   ) {
     const [verificationCode] = await this.txHost.tx
       .update(verificationCodesTable)
-      .set({ ...payload, updatedAt: new Date() })
+      .set({ ...payload })
       .where(eq(verificationCodesTable.id, id))
       .returning();
     return verificationCode;

@@ -47,7 +47,7 @@ export class AssetRepository {
   async update(id: string, payload: Partial<typeof assetsTable.$inferInsert>) {
     const [user] = await this.txHost.tx
       .update(assetsTable)
-      .set({ ...payload, updatedAt: new Date() })
+      .set({ ...payload })
       .where(eq(assetsTable.id, id))
       .returning();
     return user;

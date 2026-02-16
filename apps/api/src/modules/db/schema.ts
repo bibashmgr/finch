@@ -20,7 +20,9 @@ const usersTable = pgTable(
     avatarUrl: text("avatar_url"),
 
     createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
   (table) => [index("email_index").on(table.email)],
 );
@@ -43,7 +45,9 @@ const accountsTable = pgTable(
     }).notNull(),
 
     createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
   (table) => [unique().on(table.provider, table.providerAccountId)],
 );
@@ -58,7 +62,9 @@ const verificationCodesTable = pgTable("verification_codes", {
   consumedAt: timestamp("consumed_at"),
 
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 const refreshTokensTable = pgTable("refresh_tokens", {
@@ -76,7 +82,9 @@ const refreshTokensTable = pgTable("refresh_tokens", {
   revokedAt: timestamp("revoked_at"),
 
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 const assetTypeEnum = pgEnum("asset_type", ["image", "video", "raw"]);
@@ -104,7 +112,9 @@ const assetsTable = pgTable(
 
     deletedAt: timestamp("deleted_at"),
     createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
   (table) => [
     index("assets_user_id_index").on(table.userId),

@@ -47,7 +47,7 @@ export class UsersRepository {
   ): Promise<typeof usersTable.$inferSelect | undefined> {
     const [user] = await this.txHost.tx
       .update(usersTable)
-      .set({ ...payload, updatedAt: new Date() })
+      .set({ ...payload })
       .where(eq(usersTable.id, id))
       .returning();
     return user;
