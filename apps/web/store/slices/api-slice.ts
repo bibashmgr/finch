@@ -11,6 +11,14 @@ import { ApiErrorResponse } from "@/types/response";
 
 const mutex = new Mutex();
 
+const publicRoutes = [
+  "/",
+  "/terms-of-service",
+  "/privacy-policy",
+  "/login",
+  "/verify-email",
+];
+
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
   credentials: "include",
@@ -46,9 +54,11 @@ const baseQueryWithReauth: BaseQueryFn<
         if (refreshResult.data) {
           result = await baseQuery(args, api, extraOptions);
         } else {
-          window.location.replace(
-            `${process.env.NEXT_PUBLIC_CLIENT_BASE_URL!}/login`,
-          );
+          if (!publicRoutes.includes(window.location.pathname)) {
+            window.location.replace(
+              `${process.env.NEXT_PUBLIC_CLIENT_BASE_URL!}/login`,
+            );
+          }
         }
       } finally {
         release();
