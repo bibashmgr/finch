@@ -1,14 +1,26 @@
 import React from "react";
 import { Metadata } from "next";
 
+import { SettingItem } from "@/components/setting/setting-item";
+import { StackLayout } from "@/components/layout/stack-layout";
+
 export const metadata: Metadata = {
   title: "Settings - Finch",
 };
 
 export default function SettingsPage() {
   return (
-    <main className="w-full min-h-dvh flex justify-center items-center">
-      Settings
-    </main>
+    <StackLayout pageTitle="Settings" fallbackUrl="/profile">
+      <section className="flex flex-col">
+        <SettingItem title="Currency" href="/settings/currency" value="USD" />
+        <SettingItem
+          title="Language"
+          href="/settings/language"
+          value="English"
+        />
+        <SettingItem title="Theme" href="/settings/theme" value="Dark" />
+        <SettingItem title="Notification" href="/settings/notification" />
+      </section>
+    </StackLayout>
   );
 }
