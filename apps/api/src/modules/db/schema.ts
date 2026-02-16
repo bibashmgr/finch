@@ -24,7 +24,7 @@ const usersTable = pgTable(
       .defaultNow()
       .$onUpdate(() => new Date()),
   },
-  (table) => [index("email_index").on(table.email)],
+  (table) => [index("user_email_index").on(table.email)],
 );
 
 const accountProviderEnum = pgEnum("provider", ["google", "email"]);
@@ -52,40 +52,51 @@ const accountsTable = pgTable(
   (table) => [unique().on(table.provider, table.providerAccountId)],
 );
 
-const verificationCodesTable = pgTable("verification_codes", {
-  id: uuid("id").defaultRandom().primaryKey(),
+const verificationCodesTable = pgTable(
+  "verification_codes",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
 
-  email: varchar("email", { length: 255 }).notNull(),
-  codeHash: varchar("code_hash", { length: 255 }).notNull(),
+    email: varchar("email", { length: 255 }).notNull(),
+    codeHash: varchar("code_hash", { length: 255 }).notNull(),
 
-  expiresAt: timestamp("expires_at").notNull(),
-  consumedAt: timestamp("consumed_at"),
+    expiresAt: timestamp("expires_at").notNull(),
+    consumedAt: timestamp("consumed_at"),
 
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [index("verification_email_index").on(table.email)],
+);
 
-const refreshTokensTable = pgTable("refresh_tokens", {
-  id: uuid("id").defaultRandom().primaryKey(),
+const refreshTokensTable = pgTable(
+  "refresh_tokens",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
 
-  userId: uuid("user_id")
-    .references(() => usersTable.id, { onDelete: "cascade" })
-    .notNull(),
+    userId: uuid("user_id")
+      .references(() => usersTable.id, { onDelete: "cascade" })
+      .notNull(),
 
-  token: text("token").notNull(),
-  userAgent: text("user_agent"),
-  ipAddress: varchar("ip_address", { length: 45 }),
+    token: text("token").notNull(),
+    userAgent: text("user_agent"),
+    ipAddress: varchar("ip_address", { length: 45 }),
 
-  expiresAt: timestamp("expires_at").notNull(),
-  revokedAt: timestamp("revoked_at"),
+    expiresAt: timestamp("expires_at").notNull(),
+    revokedAt: timestamp("revoked_at"),
 
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    index("refresh_token_lookup_index").on(table.token),
+    unique("refresh_token_unique").on(table.token),
+  ],
+);
 
 const assetTypeEnum = pgEnum("asset_type", ["image", "video", "raw"]);
 

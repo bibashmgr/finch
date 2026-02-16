@@ -15,6 +15,13 @@
       "when": 1770886867670,
       "tag": "0001_add_asset_table",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771243830511,
+      "tag": "0002_update_lookup_indexes",
+      "breakpoints": true
     }
   ]
 }
