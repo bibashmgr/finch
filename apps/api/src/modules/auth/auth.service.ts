@@ -1,5 +1,9 @@
 import { Transactional } from "@nestjs-cls/transactional";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
 
 import { usersTable } from "@/modules/db/schema";
 import { OtpService } from "@/modules/otp/otp.service";
@@ -55,11 +59,29 @@ export class AuthService {
   }
 
   @Transactional()
-  async logoutUser(refreshToken: string | undefined) {
-    if (!refreshToken) {
+  async handleGoogleCallback(user: typeof usersTable.$inferSelect | null) {
+    if (!user) {
+      throw new InternalServerErrorException("Failed to login with google");
+    }
+
+    return await this.tokenService.issueAuthTokens(user.id);
+  }
+
+  @Transactional()
+  async refreshToken(token: string | undefined) {
+    if (!token) {
       throw new NotFoundException("Refresh token is not provided");
     }
 
-    return await this.tokenService.revokeRefreshTokens(refreshToken);
+    return await this.tokenService.rotateRefreshTokens(token);
+  }
+
+  @Transactional()
+  async logoutUser(token: string | undefined) {
+    if (!token) {
+      throw new NotFoundException("Refresh token is not provided");
+    }
+
+    return await this.tokenService.revokeRefreshTokens(token);
   }
 }

@@ -5,7 +5,6 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  InternalServerErrorException,
   Post,
   Req,
   Res,
@@ -28,7 +27,6 @@ export class AuthController {
   constructor(
     private readonly configService: ConfigService<Env, true>,
     private readonly authService: AuthService,
-    private readonly tokenService: TokenService,
   ) {}
 
   @Public()
@@ -50,9 +48,10 @@ export class AuthController {
     const cookieOptions = createCookieOptions();
     res.cookie("access_token", tokens.accessToken, cookieOptions);
     res.cookie("refresh_token", tokens.refreshToken, cookieOptions);
-    res.send({
+
+    return {
       message: "Login successful",
-    });
+    };
   }
 
   @Public()
@@ -64,18 +63,34 @@ export class AuthController {
   @Get("google/callback")
   @UseGuards(GoogleAuthGuard)
   async handleGoogleCallback(@Req() req: Request, @Res() res: Response) {
-    const user = req.user as typeof usersTable.$inferSelect;
-
-    if (!user) {
-      throw new InternalServerErrorException("Failed to login with google");
-    }
-
-    const tokens = await this.tokenService.issueAuthTokens(user.id);
+    const tokens = await this.authService.handleGoogleCallback(
+      req.user as typeof usersTable.$inferSelect | null,
+    );
 
     const cookieOptions = createCookieOptions();
     res.cookie("access_token", tokens.accessToken, cookieOptions);
     res.cookie("refresh_token", tokens.refreshToken, cookieOptions);
+
     res.redirect(this.configService.get("CLIENT_BASE_URL") + "/dashboard");
+  }
+
+  @Public()
+  @Post("refresh")
+  @HttpCode(HttpStatus.OK)
+  async rotateRefreshTokens(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refreshToken = req.cookies["refresh_token"] as string | undefined;
+    const tokens = await this.authService.refreshToken(refreshToken);
+
+    const cookieOptions = createCookieOptions();
+    res.cookie("access_token", tokens.accessToken, cookieOptions);
+    res.cookie("refresh_token", tokens.refreshToken, cookieOptions);
+
+    return {
+      message: "Refresh tokens successfully",
+    };
   }
 
   @Post("logout")
@@ -87,26 +102,9 @@ export class AuthController {
     const cookieOptions = createCookieOptions();
     res.clearCookie("refresh_token", cookieOptions);
     res.clearCookie("access_token", cookieOptions);
-    res.send({
+
+    return {
       message: "Logout successful",
-    });
-  }
-
-  @Public()
-  @Post("refresh")
-  @HttpCode(HttpStatus.OK)
-  async rotateRefreshTokens(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const refreshToken = req.cookies["refresh_token"] as string | undefined;
-    const tokens = await this.tokenService.rotateRefreshTokens(refreshToken);
-
-    const cookieOptions = createCookieOptions();
-    res.cookie("access_token", tokens.accessToken, cookieOptions);
-    res.cookie("refresh_token", tokens.refreshToken, cookieOptions);
-    res.send({
-      message: "Refresh tokens successfully",
-    });
+    };
   }
 }
