@@ -10,7 +10,7 @@ export default function ProtectedLayout({
 }) {
   return (
     <AccessControlLayout>
-      <div className="max-w-xl mx-auto relative border">
+      <div className="max-w-xl mx-auto relative">
         {children}
         <ProtectedBottomTab />
       </div>

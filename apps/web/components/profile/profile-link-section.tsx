@@ -29,7 +29,7 @@ export function ProfileLinkSection() {
                   <p className="text-sm text-semibold">{item.title}</p>
                 </div>
 
-                <ChevronRightIcon className="size-4" />
+                <ChevronRightIcon className="size-4 text-muted-foreground" />
               </div>
             </Link>
           );
