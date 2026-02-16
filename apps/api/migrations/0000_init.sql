@@ -1,4 +1,5 @@
 CREATE TYPE "public"."provider" AS ENUM('google', 'email');--> statement-breakpoint
+CREATE TYPE "public"."asset_type" AS ENUM('image', 'video', 'raw');--> statement-breakpoint
 CREATE TABLE "accounts" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
@@ -7,6 +8,24 @@ CREATE TABLE "accounts" (
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
 	CONSTRAINT "accounts_provider_provider_account_id_unique" UNIQUE("provider","provider_account_id")
+);
+--> statement-breakpoint
+CREATE TABLE "assets" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_id" uuid NOT NULL,
+	"public_id" varchar(255) NOT NULL,
+	"asset_type" "asset_type" NOT NULL,
+	"original_filename" varchar(255),
+	"format" varchar(50),
+	"bytes" bigint,
+	"width" integer,
+	"height" integer,
+	"duration" varchar(20),
+	"url" text NOT NULL,
+	"deleted_at" timestamp,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
+	CONSTRAINT "assets_public_id_unique" UNIQUE("public_id")
 );
 --> statement-breakpoint
 CREATE TABLE "refresh_tokens" (
@@ -18,7 +37,8 @@ CREATE TABLE "refresh_tokens" (
 	"expires_at" timestamp NOT NULL,
 	"revoked_at" timestamp,
 	"created_at" timestamp DEFAULT now(),
-	"updated_at" timestamp DEFAULT now()
+	"updated_at" timestamp DEFAULT now(),
+	CONSTRAINT "refresh_token_unique" UNIQUE("token")
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
@@ -42,5 +62,9 @@ CREATE TABLE "verification_codes" (
 );
 --> statement-breakpoint
 ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "assets" ADD CONSTRAINT "assets_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "refresh_tokens" ADD CONSTRAINT "refresh_tokens_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "email_index" ON "users" USING btree ("email");
+CREATE INDEX "assets_user_id_index" ON "assets" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "refresh_token_lookup_index" ON "refresh_tokens" USING btree ("token");--> statement-breakpoint
+CREATE INDEX "user_email_index" ON "users" USING btree ("email");--> statement-breakpoint
+CREATE INDEX "verification_email_index" ON "verification_codes" USING btree ("email");
