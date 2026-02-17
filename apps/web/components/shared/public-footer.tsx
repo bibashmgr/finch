@@ -8,13 +8,13 @@ export function PublicFooter() {
         <p className="text-xs text-muted-foreground">© 2026 FINCH</p>
 
         <div className="flex gap-4 items-center">
-          <Link href="terms-of-service" prefetch={false}>
+          <Link href="/terms-of-service" prefetch={false}>
             <p className="text-xs text-muted-foreground hover:underline">
               Terms of Service
             </p>
           </Link>
 
-          <Link href="terms-of-service" prefetch={false}>
+          <Link href="/privacy-policy" prefetch={false}>
             <p className="text-xs text-muted-foreground hover:underline">
               Privacy Policy
             </p>

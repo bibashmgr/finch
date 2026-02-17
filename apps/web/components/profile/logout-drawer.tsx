@@ -16,12 +16,16 @@ import { toast } from "@repo/ui/components/sonner";
 import { Button } from "@repo/ui/components/button";
 import { Spinner } from "@repo/ui/components/spinner";
 
-import { useAppDispatch } from "@/hooks/use-app-dispatch";
-import { useLogoutUserMutation } from "@/store/apis/auth-api";
 import {
   setIsProfileLoading,
   setProfileInfo,
 } from "@/store/slices/profile-slice";
+import {
+  setIsSettingLoading,
+  setSettingInfo,
+} from "@/store/slices/setting-slice";
+import { useAppDispatch } from "@/hooks/use-app-dispatch";
+import { useLogoutUserMutation } from "@/store/apis/auth-api";
 
 type LogoutDrawerProps = {
   isOpen: boolean;
@@ -39,6 +43,8 @@ export function LogoutDrawer({ isOpen, handleOpen }: LogoutDrawerProps) {
       await logoutUser().unwrap();
       dispatch(setProfileInfo(null));
       dispatch(setIsProfileLoading(true));
+      dispatch(setSettingInfo(null));
+      dispatch(setIsSettingLoading(true));
       toast.success("Logout successful");
       router.push("/login");
     } catch {

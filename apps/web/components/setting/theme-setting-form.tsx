@@ -11,6 +11,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@repo/ui/components/field";
+import { toast } from "@repo/ui/components/sonner";
 import { Button } from "@repo/ui/components/button";
 import { Spinner } from "@repo/ui/components/spinner";
 import { RadioGroup, RadioGroupItem } from "@repo/ui/components/radio-group";
@@ -20,9 +21,14 @@ import {
   ThemeSettingFormValues,
 } from "@/schemas/setting";
 import { themeOptions } from "@/constants/theme-options";
+import { useAppSelector } from "@/hooks/use-app-selector";
+import { useUpdateThemeSettingMutation } from "@/store/apis/setting-api";
 
 export function ThemeSettingForm() {
-  const { setTheme, theme } = useTheme();
+  const setting = useAppSelector((state) => state.setting.info);
+
+  const { setTheme } = useTheme();
+  const [updateThemeSetting] = useUpdateThemeSettingMutation();
 
   const form = useForm<ThemeSettingFormValues>({
     resolver: zodResolver(themeSettingFormSchema),
@@ -31,17 +37,23 @@ export function ThemeSettingForm() {
     },
   });
 
-  function handleFormSumit(values: ThemeSettingFormValues) {
-    setTheme(values.mode);
+  async function handleFormSumit(values: ThemeSettingFormValues) {
+    try {
+      const setting = await updateThemeSetting({ theme: values.mode }).unwrap();
+      setTheme(setting.theme);
+      toast.success("Update setting successfully");
+    } catch {
+      toast.error("Failed to update setting");
+    }
   }
 
   React.useEffect(() => {
-    if (theme) {
+    if (setting) {
       form.reset({
-        mode: theme,
+        mode: setting.theme,
       });
     }
-  }, [theme]);
+  }, [setting]);
 
   return (
     <form id="theme-setting-form" onSubmit={form.handleSubmit(handleFormSumit)}>

@@ -29,8 +29,8 @@ export type LanguageSettingFormValues = z.infer<
 >;
 
 export const notificationSettingFormSchema = z.object({
-  budget: z.boolean(),
-  tipsAndArticles: z.boolean(),
+  budgetAlerts: z.boolean(),
+  tipsArticlesAlerts: z.boolean(),
 });
 
 export type NotificationSettingFormValues = z.infer<

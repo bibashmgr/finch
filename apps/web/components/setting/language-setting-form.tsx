@@ -10,6 +10,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@repo/ui/components/field";
+import { toast } from "@repo/ui/components/sonner";
 import { Button } from "@repo/ui/components/button";
 import { Spinner } from "@repo/ui/components/spinner";
 import { RadioGroup, RadioGroupItem } from "@repo/ui/components/radio-group";
@@ -18,9 +19,14 @@ import {
   languageSettingFormSchema,
   LanguageSettingFormValues,
 } from "@/schemas/setting";
+import { useAppSelector } from "@/hooks/use-app-selector";
 import { languageOptions } from "@/constants/language-options";
+import { useUpdateLanguageSettingMutation } from "@/store/apis/setting-api";
 
 export function LanguageSettingForm() {
+  const setting = useAppSelector((state) => state.setting.info);
+  const [updateLanguageSetting] = useUpdateLanguageSettingMutation();
+
   const form = useForm<LanguageSettingFormValues>({
     resolver: zodResolver(languageSettingFormSchema),
     defaultValues: {
@@ -28,9 +34,24 @@ export function LanguageSettingForm() {
     },
   });
 
-  function handleFormSumit(values: LanguageSettingFormValues) {}
+  async function handleFormSumit(values: LanguageSettingFormValues) {
+    try {
+      await updateLanguageSetting({
+        language: values.code,
+      }).unwrap();
+      toast.success("Update setting successfully");
+    } catch {
+      toast.error("Failed to update setting");
+    }
+  }
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    if (setting) {
+      form.reset({
+        code: setting.language,
+      });
+    }
+  }, [setting, form]);
 
   return (
     <form

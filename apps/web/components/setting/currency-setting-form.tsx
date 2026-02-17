@@ -10,6 +10,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@repo/ui/components/field";
+import { toast } from "@repo/ui/components/sonner";
 import { Button } from "@repo/ui/components/button";
 import { Spinner } from "@repo/ui/components/spinner";
 import { RadioGroup, RadioGroupItem } from "@repo/ui/components/radio-group";
@@ -18,9 +19,14 @@ import {
   currencySettingFormSchema,
   CurrencySettingFormValues,
 } from "@/schemas/setting";
+import { useAppSelector } from "@/hooks/use-app-selector";
 import { currencyOptions } from "@/constants/currency-options";
+import { useUpdateCurrencySettingMutation } from "@/store/apis/setting-api";
 
 export function CurrencySettingForm() {
+  const setting = useAppSelector((state) => state.setting.info);
+  const [updateCurrencySetting] = useUpdateCurrencySettingMutation();
+
   const form = useForm<CurrencySettingFormValues>({
     resolver: zodResolver(currencySettingFormSchema),
     defaultValues: {
@@ -28,9 +34,24 @@ export function CurrencySettingForm() {
     },
   });
 
-  function handleFormSumit(values: CurrencySettingFormValues) {}
+  async function handleFormSumit(values: CurrencySettingFormValues) {
+    try {
+      await updateCurrencySetting({
+        currency: values.code,
+      }).unwrap();
+      toast.success("Update setting successfully");
+    } catch {
+      toast.error("Failed to update setting");
+    }
+  }
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    if (setting) {
+      form.reset({
+        code: setting.currency,
+      });
+    }
+  }, [setting, form]);
 
   return (
     <form

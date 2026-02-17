@@ -11,6 +11,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@repo/ui/components/field";
+import { toast } from "@repo/ui/components/sonner";
 import { Switch } from "@repo/ui/components/switch";
 import { Button } from "@repo/ui/components/button";
 import { Spinner } from "@repo/ui/components/spinner";
@@ -19,19 +20,38 @@ import {
   notificationSettingFormSchema,
   NotificationSettingFormValues,
 } from "@/schemas/setting";
+import { useAppSelector } from "@/hooks/use-app-selector";
+import { useUpdateNotificationSettingMutation } from "@/store/apis/setting-api";
 
 export function NotificationSettingForm() {
+  const setting = useAppSelector((state) => state.setting.info);
+  const [updateNotificationSetting] = useUpdateNotificationSettingMutation();
+
   const form = useForm<NotificationSettingFormValues>({
     resolver: zodResolver(notificationSettingFormSchema),
     defaultValues: {
-      budget: false,
-      tipsAndArticles: false,
+      budgetAlerts: false,
+      tipsArticlesAlerts: false,
     },
   });
 
-  function handleFormSumit(values: NotificationSettingFormValues) {}
+  async function handleFormSumit(values: NotificationSettingFormValues) {
+    try {
+      await updateNotificationSetting(values).unwrap();
+      toast.success("Update setting successfully");
+    } catch {
+      toast.error("Failed to update setting");
+    }
+  }
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    if (setting) {
+      form.reset({
+        budgetAlerts: setting.budgetAlerts,
+        tipsArticlesAlerts: setting.tipsArticlesAlerts,
+      });
+    }
+  }, [setting, form]);
 
   return (
     <form
@@ -40,7 +60,7 @@ export function NotificationSettingForm() {
     >
       <FieldGroup>
         <Controller
-          name="budget"
+          name="budgetAlerts"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field orientation="horizontal" data-invalid={fieldState.invalid}>
@@ -51,9 +71,10 @@ export function NotificationSettingForm() {
                 </FieldDescription>
               </FieldContent>
               <Switch
-                {...field}
                 id="budget"
-                value={field.value ? "on" : "off"}
+                checked={field.value}
+                onCheckedChange={field.onChange}
+                disabled={field.disabled}
                 aria-invalid={fieldState.invalid}
               />
             </Field>
@@ -61,7 +82,7 @@ export function NotificationSettingForm() {
         />
 
         <Controller
-          name="tipsAndArticles"
+          name="tipsArticlesAlerts"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field orientation="horizontal" data-invalid={fieldState.invalid}>
@@ -74,9 +95,10 @@ export function NotificationSettingForm() {
                 </FieldDescription>
               </FieldContent>
               <Switch
-                {...field}
                 id="tips-and-articles"
-                value={field.value ? "on" : "off"}
+                checked={field.value}
+                onCheckedChange={field.onChange}
+                disabled={field.disabled}
                 aria-invalid={fieldState.invalid}
               />
             </Field>

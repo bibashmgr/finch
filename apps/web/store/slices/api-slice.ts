@@ -9,8 +9,6 @@ import {
 
 import { ApiErrorResponse } from "@/types/response";
 
-const mutex = new Mutex();
-
 const publicRoutes = [
   "/",
   "/terms-of-service",
@@ -18,6 +16,8 @@ const publicRoutes = [
   "/login",
   "/verify-email",
 ];
+
+const mutex = new Mutex();
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -74,6 +74,6 @@ const baseQueryWithReauth: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Profile"],
+  tagTypes: ["Profile", "Setting"],
   endpoints: () => ({}),
 });

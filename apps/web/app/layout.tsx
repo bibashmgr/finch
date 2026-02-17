@@ -10,6 +10,7 @@ import { StoreProvider } from "@/components/provider/store-provider";
 
 import "@repo/ui/globals.css";
 import { ProfileProvider } from "@/components/provider/profile-provider";
+import { SettingProvider } from "@/components/provider/setting-provider";
 
 const fontSans = Open_Sans({
   variable: "--font-sans",
@@ -40,12 +41,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${fontSans.variable} ${fontMono.variable}`}>
         <StoreProvider>
-          <ThemeProvider>
-            <ProfileProvider>
-              <TooltipProvider>{children}</TooltipProvider>
-            </ProfileProvider>
-            <Toaster position="top-center" />
-          </ThemeProvider>
+          <ProfileProvider>
+            <SettingProvider>
+              <ThemeProvider>
+                <TooltipProvider>{children}</TooltipProvider>
+                <Toaster position="top-center" />
+              </ThemeProvider>
+            </SettingProvider>
+          </ProfileProvider>
         </StoreProvider>
       </body>
     </html>

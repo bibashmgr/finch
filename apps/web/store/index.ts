@@ -2,11 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import { apiSlice } from "./slices/api-slice";
 import profileReducer from "./slices/profile-slice";
+import settingReducer from "./slices/setting-slice";
 
 export const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
     profile: profileReducer,
+    setting: settingReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),
