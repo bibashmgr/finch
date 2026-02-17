@@ -11,6 +11,7 @@ import { UserModule } from "@/modules/user/user.module";
 import { AuthModule } from "@/modules/auth/auth.module";
 import { AssetModule } from "@/modules/asset/asset.module";
 import { HealthModule } from "@/modules/health/health.module";
+import { SettingModule } from "@/modules/setting/setting.module";
 
 import { createClsConfig } from "@/config/cls.config";
 import { createMailConfig } from "@/config/mail.config";
@@ -45,6 +46,7 @@ import { createThrollerConfig } from "@/config/throttler.config";
     AuthModule,
     AssetModule,
     UserModule,
+    SettingModule,
   ],
   controllers: [],
   providers: [
