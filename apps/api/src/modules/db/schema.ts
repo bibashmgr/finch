@@ -9,6 +9,7 @@ import {
   unique,
   integer,
   bigint,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 const usersTable = pgTable(
@@ -135,6 +136,37 @@ const assetsTable = pgTable(
   ],
 );
 
+const themeEnum = pgEnum("theme", ["light", "dark", "system"]);
+
+const currencyEnum = pgEnum("currency", ["usd", "aud", "npr"]);
+
+const languageEnum = pgEnum("language", ["en", "ne"]);
+
+const settingsTable = pgTable(
+  "settings",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+
+    userId: uuid("user_id")
+      .references(() => usersTable.id, { onDelete: "cascade" })
+      .notNull()
+      .unique(),
+
+    currency: currencyEnum("currency").default("usd").notNull(),
+    language: languageEnum("language").default("en").notNull(),
+    theme: themeEnum("theme").default("system").notNull(),
+
+    budgetAlerts: boolean("budget_alerts").default(true).notNull(),
+    tipsArticlesAlerts: boolean("tips_articles_alerts").default(true).notNull(),
+
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [index("settings_user_id_index").on(table.userId)],
+);
+
 export {
   usersTable,
   accountProviderEnum,
@@ -143,4 +175,8 @@ export {
   refreshTokensTable,
   assetTypeEnum,
   assetsTable,
+  themeEnum,
+  currencyEnum,
+  languageEnum,
+  settingsTable,
 };

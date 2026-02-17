@@ -8,6 +8,13 @@
       "when": 1771262426265,
       "tag": "0000_init",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1771328103898,
+      "tag": "0001_add_setting_table",
+      "breakpoints": true
     }
   ]
 }
