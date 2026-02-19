@@ -3,6 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeftIcon } from "lucide-react";
+import { Button } from "@repo/ui/components/button";
 
 type StackLayoutProps = {
   pageTitle: string;
@@ -31,20 +32,24 @@ export function StackLayout({
     <div>
       <div className="flex justify-between items-center gap-2 border-b py-4 px-4">
         <div className="flex-1">
-          <ChevronLeftIcon
-            className="size-5 cursor-pointer"
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={handleBackButton}
-          />
+            className="cursor-pointer"
+          >
+            <ChevronLeftIcon className="size-5" />
+          </Button>
         </div>
 
         <div className="flex-1">
           <p className="text-sm font-semibold text-center">{pageTitle}</p>
         </div>
 
-        <div className="flex-1">{action}</div>
+        <div className="flex-1 flex justify-end">{action}</div>
       </div>
 
-      <main className="w-full min-h-dvh px-4 pt-4">{children}</main>
+      <main className="w-full px-4 py-4">{children}</main>
     </div>
   );
 }
