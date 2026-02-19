@@ -57,9 +57,7 @@ export function LogoutDrawer({ isOpen, handleOpen }: LogoutDrawerProps) {
       <DrawerContent className="mx-auto w-full max-w-xl">
         <DrawerHeader>
           <DrawerTitle>Logout</DrawerTitle>
-          <DrawerDescription>
-            Are you sure do you wanna logout?
-          </DrawerDescription>
+          <DrawerDescription>Are you sure you wanna logout?</DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className="flex flex-row">
           <DrawerClose className="flex-1" asChild>
