@@ -2,6 +2,7 @@ import {
   EditIcon,
   LogOutIcon,
   SettingsIcon,
+  ShapesIcon,
   type LucideIcon,
 } from "lucide-react";
 
@@ -16,6 +17,11 @@ const profileNavLinks: ProfileNavLink[] = [
     title: "Edit Profile",
     href: "/profile/edit",
     icon: EditIcon,
+  },
+  {
+    title: "Category",
+    href: "/categories",
+    icon: ShapesIcon,
   },
   {
     title: "Settings",

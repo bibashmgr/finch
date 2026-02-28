@@ -47,20 +47,11 @@ export function TransactionDeleteDrawer({
         </DrawerHeader>
         <DrawerFooter className="flex flex-row">
           <DrawerClose className="flex-1" asChild>
-            <Button
-              variant="outline"
-              className="w-full"
-              // disabled={isLoading}
-            >
+            <Button variant="outline" className="w-full">
               Cancel
             </Button>
           </DrawerClose>
-          <Button
-            className="flex-1"
-            onClick={handleDeleteTransaction}
-            // disabled={isLoading}
-          >
-            {/* {isLoading ? <Spinner /> : "Confirm"} */}
+          <Button className="flex-1" onClick={handleDeleteTransaction}>
             Confirm
           </Button>
         </DrawerFooter>

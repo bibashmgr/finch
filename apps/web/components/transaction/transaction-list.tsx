@@ -3,21 +3,13 @@ import Link from "next/link";
 
 import { TransactionCard } from "@/components/transaction/transaction-card";
 
-export function RecentTransactionList() {
+export function TransactionList() {
   return (
     <section className="space-y-4">
-      <div className="flex gap-2 justify-between items-center">
-        <p className="text-base font-bold">Recent Transactions</p>
-
-        <Link href="/transactions" prefetch={false}>
-          <p className="text-base text-muted-foreground hover:underline">
-            See all
-          </p>
-        </Link>
-      </div>
+      <p className="text-base font-bold">20 Feb 2025</p>
 
       <div className="flex flex-col gap-3">
-        {Array.from({ length: 10 }).map((_, index) => {
+        {Array.from({ length: 15 }).map((_, index) => {
           return (
             <Link key={index} href={`/transactions/1`} prefetch={false}>
               <TransactionCard />

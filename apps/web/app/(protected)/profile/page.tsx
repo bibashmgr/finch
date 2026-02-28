@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ProfilePage() {
   return (
-    <main className="w-full min-h-dvh py-12 px-4 space-y-12">
+    <main className="py-12 px-4 space-y-12">
       <ProfileInfoSection />
       <ProfileLinkSection />
     </main>

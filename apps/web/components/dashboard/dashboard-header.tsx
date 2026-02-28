@@ -18,7 +18,7 @@ export function DashboardHeader() {
   const profile = useAppSelector((state) => state.profile.info);
 
   return (
-    <section className="flex flex-row justify-between gap-4">
+    <section className="sticky top-0 flex flex-row justify-between gap-4 bg-background py-4">
       <div className="flex flex-row gap-2">
         <Avatar className="border rounded-md size-10">
           <AvatarImage src={profile?.avatarUrl ?? ""} className="rounded-md" />

@@ -4,6 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeftIcon } from "lucide-react";
 import { Button } from "@repo/ui/components/button";
+import { cn } from "@repo/ui/lib/utils";
 
 type StackLayoutProps = {
   pageTitle: string;
@@ -30,8 +31,8 @@ export function StackLayout({
 
   return (
     <div>
-      <div className="flex justify-between items-center gap-2 border-b py-4 px-4">
-        <div className="flex-1">
+      <div className="flex justify-between items-center gap-2 border-b py-4 px-4 sticky top-0 bg-background">
+        <div>
           <Button
             variant="ghost"
             size="icon"
@@ -46,7 +47,7 @@ export function StackLayout({
           <p className="text-sm font-semibold text-center">{pageTitle}</p>
         </div>
 
-        <div className="flex-1 flex justify-end">{action}</div>
+        <div className={cn(action ? "" : "size-9")}>{action}</div>
       </div>
 
       <main className="w-full px-4 py-4">{children}</main>

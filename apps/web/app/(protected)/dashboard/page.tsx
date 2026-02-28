@@ -11,11 +11,13 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   return (
-    <main className="w-full min-h-dvh px-4 py-4 space-y-6">
+    <main className="px-4">
       <DashboardHeader />
-      <DashboardStats />
-      <RecentTransactionList />
-      <div className="py-7" />
+      <div className="space-y-6">
+        <DashboardStats />
+        <RecentTransactionList />
+      </div>
+      <div className="py-11" />
     </main>
   );
 }
