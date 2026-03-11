@@ -16,7 +16,6 @@ import { Env } from "@/config/env.config";
 import { usersTable } from "@/modules/db/schema";
 import { AuthService } from "@/modules/auth/auth.service";
 import { createCookieOptions } from "@/config/cookie.config";
-import { TokenService } from "@/modules/token/token.service";
 import { Public } from "@/modules/auth/decorators/public.decorator";
 import { VerifyEmailDto } from "@/modules/auth/dtos/verify-email.dto";
 import { GoogleAuthGuard } from "@/modules/auth/guards/google-auth.guard";
