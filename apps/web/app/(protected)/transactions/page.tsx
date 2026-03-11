@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Metadata } from "next";
 import { FileChartLineIcon, ChevronRightIcon } from "lucide-react";
 
@@ -9,9 +10,8 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@repo/ui/components/item";
-import { TransactionList } from "@/components/transaction/transaction-list";
-import { TransactionListHeader } from "@/components/transaction/transaction-list-header";
-import Link from "next/link";
+import { TransactionList } from "./_components/transaction-list";
+import { TransactionListHeader } from "./_components/transaction-list-header";
 
 export const metadata: Metadata = {
   title: "Transactions - Finch",

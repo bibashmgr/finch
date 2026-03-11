@@ -1,8 +1,8 @@
 import React from "react";
 import { Metadata } from "next";
 
-import { StackLayout } from "@/components/layout/stack-layout";
-import { ProfileEditForm } from "@/components/profile/profile-edit-form";
+import { ProfileEditForm } from "./profile-edit-form";
+import { StackLayout } from "@/components/stack-layout";
 
 export const metadata: Metadata = {
   title: "Edit Profile - Finch",

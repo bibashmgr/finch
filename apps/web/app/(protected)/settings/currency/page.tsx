@@ -1,8 +1,8 @@
 import React from "react";
 import { Metadata } from "next";
 
-import { StackLayout } from "@/components/layout/stack-layout";
-import { CurrencySettingForm } from "@/components/setting/currency-setting-form";
+import { StackLayout } from "@/components/stack-layout";
+import { CurrencySettingForm } from "./currency-setting-form";
 
 export const metadata: Metadata = {
   title: "Currency Setting - Finch",

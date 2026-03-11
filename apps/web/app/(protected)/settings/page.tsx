@@ -1,8 +1,8 @@
 import React from "react";
 import { Metadata } from "next";
 
-import { StackLayout } from "@/components/layout/stack-layout";
-import { SettingList } from "@/components/setting/setting-list";
+import { SettingList } from "./setting-list";
+import { StackLayout } from "@/components/stack-layout";
 
 export const metadata: Metadata = {
   title: "Settings - Finch",

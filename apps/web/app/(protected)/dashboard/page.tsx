@@ -1,9 +1,9 @@
 import React from "react";
 import { Metadata } from "next";
 
-import { DashboardHeader } from "@/components/dashboard/dashboard-header";
-import { DashboardStats } from "@/components/dashboard/dashboard-stats";
-import { RecentTransactionList } from "@/components/dashboard/recent-transaction-list";
+import { DashboardHeader } from "./_components/dashboard-header";
+import { DashboardStats } from "./_components/dashboard-stats";
+import { RecentTransactionList } from "./_components/recent-transaction-list";
 
 export const metadata: Metadata = {
   title: "Home - Finch",

@@ -1,9 +1,10 @@
 import React from "react";
 import { Metadata } from "next";
-import { StackLayout } from "@/components/layout/stack-layout";
-import { Button } from "@repo/ui/components/button";
 import { DownloadIcon } from "lucide-react";
-import { ReportDetail } from "@/components/report/report-detail";
+
+import { ReportDetail } from "./report-detail";
+import { Button } from "@repo/ui/components/button";
+import { StackLayout } from "@/components/stack-layout";
 
 export const metadata: Metadata = {
   title: "Report - Finch",

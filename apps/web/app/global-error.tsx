@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Courier_Prime, Open_Sans } from "next/font/google";
 
 import { Button } from "@repo/ui/components/button";
-import { ThemeProvider } from "@/components/provider/theme-provider";
+import { ThemeProvider } from "@/app/_components/theme-provider";
 
 import "@repo/ui/styles/globals.css";
 

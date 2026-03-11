@@ -4,13 +4,13 @@ import { Courier_Prime, Open_Sans } from "next/font/google";
 import { siteConfig } from "@/constants/site-config";
 
 import { Toaster } from "@repo/ui/components/sonner";
+import { ThemeProvider } from "./_components/theme-provider";
+import { StoreProvider } from "./_components/store-provider";
 import { TooltipProvider } from "@repo/ui/components/tooltip";
-import { ThemeProvider } from "@/components/provider/theme-provider";
-import { StoreProvider } from "@/components/provider/store-provider";
+import { ProfileProvider } from "./_components/profile-provider";
+import { SettingProvider } from "./_components/setting-provider";
 
 import "@repo/ui/globals.css";
-import { ProfileProvider } from "@/components/provider/profile-provider";
-import { SettingProvider } from "@/components/provider/setting-provider";
 
 const fontSans = Open_Sans({
   variable: "--font-sans",

@@ -1,7 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
 
-import { TransactionForm } from "@/components/transaction/transaction-form";
+import { TransactionForm } from "../_components/transaction-form";
 
 export const metadata: Metadata = {
   title: "Add Transaction - Finch",

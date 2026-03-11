@@ -1,7 +1,7 @@
 import React from "react";
 
-import { PublicHeader } from "@/components/shared/public-header";
-import { PublicFooter } from "@/components/shared/public-footer";
+import { Header } from "@/app/(public)/_components/public-header";
+import { Footer } from "@/app/(public)/_components/public-footer";
 
 export default function PublicLayout({
   children,
@@ -10,9 +10,9 @@ export default function PublicLayout({
 }) {
   return (
     <>
-      <PublicHeader />
+      <Header />
       {children}
-      <PublicFooter />
+      <Footer />
     </>
   );
 }

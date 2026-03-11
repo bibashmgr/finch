@@ -1,4 +1,3 @@
-import { apiSlice } from "@/store/slices/api-slice";
 import {
   Setting,
   UpdateCurrencySettingInput,
@@ -6,6 +5,7 @@ import {
   UpdateNotificationSettingInput,
   UpdateThemeSettingInput,
 } from "@/types/setting";
+import { apiSlice } from "@/store/slices/api-slice";
 
 const settingApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
