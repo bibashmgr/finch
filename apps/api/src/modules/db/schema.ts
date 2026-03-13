@@ -22,9 +22,10 @@ const usersTable = pgTable(
     name: varchar("name", { length: 255 }).notNull(),
     avatarUrl: text("avatar_url"),
 
-    createdAt: timestamp("created_at").defaultNow(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
+      .notNull()
       .$onUpdate(() => new Date()),
   },
   (table) => [index("user_email_index").on(table.email)],
@@ -47,12 +48,18 @@ const accountsTable = pgTable(
       length: 255,
     }).notNull(),
 
-    createdAt: timestamp("created_at").defaultNow(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
+      .notNull()
       .$onUpdate(() => new Date()),
   },
-  (table) => [unique().on(table.provider, table.providerAccountId)],
+  (table) => [
+    unique("accounts_provider_unique").on(
+      table.provider,
+      table.providerAccountId,
+    ),
+  ],
 );
 
 const verificationCodesTable = pgTable(
@@ -66,9 +73,10 @@ const verificationCodesTable = pgTable(
     expiresAt: timestamp("expires_at").notNull(),
     consumedAt: timestamp("consumed_at"),
 
-    createdAt: timestamp("created_at").defaultNow(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
+      .notNull()
       .$onUpdate(() => new Date()),
   },
   (table) => [index("verification_email_index").on(table.email)],
@@ -90,9 +98,10 @@ const refreshTokensTable = pgTable(
     expiresAt: timestamp("expires_at").notNull(),
     revokedAt: timestamp("revoked_at"),
 
-    createdAt: timestamp("created_at").defaultNow(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
+      .notNull()
       .$onUpdate(() => new Date()),
   },
   (table) => [
@@ -125,9 +134,10 @@ const assetsTable = pgTable(
     url: text("url").notNull(),
 
     deletedAt: timestamp("deleted_at"),
-    createdAt: timestamp("created_at").defaultNow(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
+      .notNull()
       .$onUpdate(() => new Date()),
   },
   (table) => [
@@ -159,12 +169,42 @@ const settingsTable = pgTable(
     budgetAlerts: boolean("budget_alerts").default(true).notNull(),
     tipsArticlesAlerts: boolean("tips_articles_alerts").default(true).notNull(),
 
-    createdAt: timestamp("created_at").defaultNow(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
+      .notNull()
       .$onUpdate(() => new Date()),
   },
   (table) => [index("settings_user_id_index").on(table.userId)],
+);
+
+const categoryTypeEnum = pgEnum("category_type", ["income", "expense"]);
+
+const categoriesTable = pgTable(
+  "categories",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+
+    userId: uuid("user_id")
+      .references(() => usersTable.id, { onDelete: "cascade" })
+      .notNull(),
+
+    categoryType: categoryTypeEnum("category_type").notNull(),
+    title: varchar("title", { length: 20 }).notNull(),
+    description: varchar("description", { length: 255 }).notNull(),
+    icon: text("icon").notNull(),
+    color: varchar("color", { length: 7 }).notNull(),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    index("categories_user_id_index").on(table.userId),
+    unique("categories_user_title_unique").on(table.userId, table.title),
+  ],
 );
 
 export {
@@ -179,4 +219,6 @@ export {
   currencyEnum,
   languageEnum,
   settingsTable,
+  categoryTypeEnum,
+  categoriesTable,
 };
