@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { transactionFormSchema, TransactionFormValues } from "../schema";
 import { paymentMethodOptions } from "@/constants/payment-method-options";
-import { transactionTypeOptions } from "@/constants/transaction-type-options";
 
 import {
   Field,
@@ -39,7 +38,6 @@ export function TransactionForm() {
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(transactionFormSchema),
     defaultValues: {
-      type: "",
       categoryId: "",
       amount: "",
       notes: "",
@@ -58,33 +56,6 @@ export function TransactionForm() {
       onSubmit={form.handleSubmit(handleFormSubmit)}
     >
       <FieldGroup>
-        <Controller
-          name="type"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="type">Type</FieldLabel>
-              <Select {...field} onValueChange={field.onChange}>
-                <SelectTrigger aria-invalid={fieldState.invalid}>
-                  <SelectValue placeholder="Select an option" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {transactionTypeOptions.map((option) => {
-                      return (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-
         <Controller
           name="amount"
           control={form.control}

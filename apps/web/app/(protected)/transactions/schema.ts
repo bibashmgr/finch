@@ -1,9 +1,6 @@
 import { z } from "zod";
 
 export const transactionFormSchema = z.object({
-  type: z.string().nonempty({
-    error: "Please select an option.",
-  }),
   categoryId: z.string(),
   amount: z.string().nonempty({
     error: "Please enter an amount.",

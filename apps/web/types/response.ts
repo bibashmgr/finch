@@ -7,3 +7,11 @@ export type ApiErrorResponse = {
 export type EmptyResponse = {
   message: string;
 };
+
+export type PaginatedResponse<RSchema> = {
+  results: RSchema[];
+  limit: number;
+  page: number;
+  totalPages: number;
+  totalResults: number;
+};

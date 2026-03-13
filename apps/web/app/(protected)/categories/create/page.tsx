@@ -2,7 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 
 import { StackLayout } from "@/components/stack-layout";
-import { CategoryForm } from "@/app/(protected)/categories/category-form";
+import { CategoryCreateForm } from "./category-create-form";
 
 export const metadata: Metadata = {
   title: "Add Category - Finch",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function CategoryCreatePage() {
   return (
     <StackLayout pageTitle="Add Category" fallbackUrl="/categories">
-      <CategoryForm />
+      <CategoryCreateForm />
     </StackLayout>
   );
 }
