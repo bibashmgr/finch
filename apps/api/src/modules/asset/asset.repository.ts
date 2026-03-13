@@ -45,11 +45,11 @@ export class AssetRepository {
   }
 
   async update(id: string, payload: Partial<typeof assetsTable.$inferInsert>) {
-    const [user] = await this.txHost.tx
+    const [asset] = await this.txHost.tx
       .update(assetsTable)
       .set({ ...payload })
       .where(eq(assetsTable.id, id))
       .returning();
-    return user;
+    return asset;
   }
 }
