@@ -113,6 +113,7 @@ export function CategoryEditForm() {
                 key={field.value}
                 value={field.value}
                 onValueChange={field.onChange}
+                disabled
               >
                 <SelectTrigger aria-invalid={fieldState.invalid}>
                   <SelectValue placeholder="Select an option" />
