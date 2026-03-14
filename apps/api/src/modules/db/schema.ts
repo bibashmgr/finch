@@ -10,6 +10,7 @@ import {
   integer,
   bigint,
   boolean,
+  numeric,
 } from "drizzle-orm/pg-core";
 
 const usersTable = pgTable(
@@ -189,7 +190,7 @@ const categoriesTable = pgTable(
       .references(() => usersTable.id, { onDelete: "cascade" })
       .notNull(),
 
-    categoryType: categoryTypeEnum("category_type").notNull(),
+    type: categoryTypeEnum("type").notNull(),
     title: varchar("title", { length: 20 }).notNull(),
     description: varchar("description", { length: 255 }).notNull(),
     icon: text("icon").notNull(),
@@ -207,6 +208,64 @@ const categoriesTable = pgTable(
   ],
 );
 
+const paymentMethodEnum = pgEnum("payment_method", ["cash", "card", "online"]);
+
+const transactionsTable = pgTable(
+  "transactions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+
+    userId: uuid("user_id")
+      .references(() => usersTable.id, { onDelete: "cascade" })
+      .notNull(),
+    categoryId: uuid("category_id")
+      .references(() => categoriesTable.id, { onDelete: "cascade" })
+      .notNull(),
+
+    currency: varchar("currency", {
+      length: 3,
+    }).notNull(),
+    amount: numeric("amount").notNull(),
+    notes: varchar("notes", {
+      length: 255,
+    }).notNull(),
+    paymentMethod: paymentMethodEnum("payment_method").notNull(),
+    issuedAt: timestamp("issued_at").notNull(),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    index("transactions_user_id_index").on(table.userId),
+    index("transactions_category_id_index").on(table.categoryId),
+  ],
+);
+
+const transactionAttachmentsTable = pgTable(
+  "transaction_attachments",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+
+    transactionId: uuid("transaction_id")
+      .references(() => transactionsTable.id, { onDelete: "cascade" })
+      .notNull(),
+
+    url: text("url").notNull(),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    index("attachments_transaction_id_index").on(table.transactionId),
+  ],
+);
+
 export {
   usersTable,
   accountProviderEnum,
@@ -221,4 +280,7 @@ export {
   settingsTable,
   categoryTypeEnum,
   categoriesTable,
+  paymentMethodEnum,
+  transactionsTable,
+  transactionAttachmentsTable,
 };
