@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 
 @Injectable()
 export class AssetRepository {
-  constructor(private txHost: TransactionHost<DbTransactionAdapter>) {}
+  constructor(private readonly txHost: TransactionHost<DbTransactionAdapter>) {}
 
   async create(payload: typeof assetsTable.$inferInsert) {
     const [asset] = await this.txHost.tx

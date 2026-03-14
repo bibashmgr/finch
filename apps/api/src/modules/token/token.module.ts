@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 
 import { Env } from "@/config/env.config";
 import { TokenService } from "@/modules/token/token.service";
-import { TokenRepository } from "./token.repository";
+import { TokenRepository } from "@/modules/token/token.repository";
 
 @Module({
   imports: [

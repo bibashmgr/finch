@@ -7,7 +7,7 @@ import { DbTransactionAdapter } from "@/modules/db/client";
 
 @Injectable()
 export class TokenRepository {
-  constructor(private txHost: TransactionHost<DbTransactionAdapter>) {}
+  constructor(private readonly txHost: TransactionHost<DbTransactionAdapter>) {}
 
   async saveRefreshToken(payload: typeof refreshTokensTable.$inferInsert) {
     const [refreshToken] = await this.txHost.tx

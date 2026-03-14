@@ -7,7 +7,7 @@ import { and, eq, gt, isNull } from "drizzle-orm";
 
 @Injectable()
 export class OtpRepository {
-  constructor(private txHost: TransactionHost<DbTransactionAdapter>) {}
+  constructor(private readonly txHost: TransactionHost<DbTransactionAdapter>) {}
 
   async saveVerificationCode(
     payload: typeof verificationCodesTable.$inferInsert,

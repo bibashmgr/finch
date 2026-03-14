@@ -14,9 +14,9 @@ import { TokenRepository } from "@/modules/token/token.repository";
 @Injectable()
 export class TokenService {
   constructor(
-    private configService: ConfigService<Env, true>,
-    private jwtService: JwtService,
-    private tokenRepository: TokenRepository,
+    private readonly configService: ConfigService<Env, true>,
+    private readonly jwtService: JwtService,
+    private readonly tokenRepository: TokenRepository,
   ) {}
 
   async generateToken(

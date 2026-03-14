@@ -10,8 +10,8 @@ import { OtpRepository } from "@/modules/otp/otp.repository";
 @Injectable()
 export class OtpService {
   constructor(
-    private configService: ConfigService<Env, true>,
-    private otpRepository: OtpRepository,
+    private readonly configService: ConfigService<Env, true>,
+    private readonly otpRepository: OtpRepository,
   ) {}
 
   async saveOtpCode(email: string) {

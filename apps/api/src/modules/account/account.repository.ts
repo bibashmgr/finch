@@ -7,7 +7,7 @@ import { DbTransactionAdapter } from "@/modules/db/client";
 
 @Injectable()
 export class AccountRepository {
-  constructor(private txHost: TransactionHost<DbTransactionAdapter>) {}
+  constructor(private readonly txHost: TransactionHost<DbTransactionAdapter>) {}
 
   async create(payload: typeof accountsTable.$inferInsert) {
     const [account] = await this.txHost.tx

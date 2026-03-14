@@ -15,11 +15,11 @@ import { AccountRepository } from "@/modules/account/account.repository";
 @Injectable()
 export class AuthService {
   constructor(
-    private otpService: OtpService,
-    private mailService: MailService,
-    private tokenService: TokenService,
-    private userRepository: UsersRepository,
-    private accountRepository: AccountRepository,
+    private readonly otpService: OtpService,
+    private readonly mailService: MailService,
+    private readonly tokenService: TokenService,
+    private readonly userRepository: UsersRepository,
+    private readonly accountRepository: AccountRepository,
   ) {}
 
   @Transactional()
