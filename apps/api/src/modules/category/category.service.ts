@@ -6,9 +6,9 @@ import {
 import { Transactional } from "@nestjs-cls/transactional";
 
 import { CategoryRepository } from "@/modules/category/category.repository";
-import { GetCategoriesDto } from "@/modules/category/dto/get-categories-dto";
-import { CreateCategoryDto } from "@/modules/category/dto/create-category.dto";
-import { UpdateCategoryDto } from "./dto/update-category.dto copy";
+import { GetCategoriesDto } from "@/modules/category/dtos/get-categories-dto";
+import { CreateCategoryDto } from "@/modules/category/dtos/create-category.dto";
+import { UpdateCategoryByIdDto } from "@/modules/category/dtos/update-category-by-id.dto";
 
 @Injectable()
 export class CategoryService {
@@ -16,7 +16,7 @@ export class CategoryService {
 
   @Transactional()
   async getCategories(userId: string, query: GetCategoriesDto) {
-    const filters = { userId };
+    const filters = { userId, type: query.type };
     const options = {
       limit: query.limit,
       page: query.page,
@@ -50,7 +50,7 @@ export class CategoryService {
   @Transactional()
   async updateCategoryById(
     categoryId: string,
-    dto: UpdateCategoryDto,
+    dto: UpdateCategoryByIdDto,
     userId: string,
   ) {
     const category = await this.categoryRepository.findById(categoryId);
@@ -63,6 +63,6 @@ export class CategoryService {
       throw new ForbiddenException("Access denied");
     }
 
-    return await this.categoryRepository.update(categoryId, dto);
+    return await this.categoryRepository.updateById(categoryId, dto);
   }
 }

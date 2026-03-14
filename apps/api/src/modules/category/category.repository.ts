@@ -1,5 +1,5 @@
-import { count, desc, eq } from "drizzle-orm";
 import { Injectable } from "@nestjs/common";
+import { and, count, desc, eq } from "drizzle-orm";
 import { TransactionHost } from "@nestjs-cls/transactional";
 
 import { categoriesTable } from "@/modules/db/schema";
@@ -9,7 +9,7 @@ import { GetCategoriesOptions } from "@/modules/category/entities/get-categories
 
 @Injectable()
 export class CategoryRepository {
-  constructor(private txHost: TransactionHost<DbTransactionAdapter>) {}
+  constructor(private readonly txHost: TransactionHost<DbTransactionAdapter>) {}
 
   async create(payload: typeof categoriesTable.$inferInsert) {
     const [category] = await this.txHost.tx
@@ -20,14 +20,23 @@ export class CategoryRepository {
   }
 
   async findAll(filters: GetCategoriesFilters, options: GetCategoriesOptions) {
-    const { limit = 10, page = 1 } = options;
+    const conditions = [];
 
+    if (filters.userId) {
+      conditions.push(eq(categoriesTable.userId, filters.userId));
+    }
+
+    if (filters.type) {
+      conditions.push(eq(categoriesTable.type, filters.type));
+    }
+
+    const { limit = 10, page = 1 } = options;
     const offset = (page - 1) * limit;
 
     const results = await this.txHost.tx
       .select()
       .from(categoriesTable)
-      .where(eq(categoriesTable.userId, filters.userId))
+      .where(and(...conditions))
       .orderBy(desc(categoriesTable.createdAt))
       .limit(limit)
       .offset(offset);
@@ -56,7 +65,7 @@ export class CategoryRepository {
     return category;
   }
 
-  async update(
+  async updateById(
     id: string,
     payload: Partial<typeof categoriesTable.$inferInsert>,
   ) {

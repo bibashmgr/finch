@@ -1,5 +1,4 @@
 import {
-  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -8,9 +7,11 @@ import {
   MaxLength,
   MinLength,
 } from "class-validator";
+import { Transform } from "class-transformer";
 
-export class UpdateCategoryDto {
+export class UpdateCategoryByIdDto {
   @IsString()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
   @IsNotEmpty()
   @MinLength(2)
   @MaxLength(20)
@@ -18,6 +19,7 @@ export class UpdateCategoryDto {
   title?: string;
 
   @IsString()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
   @IsNotEmpty()
   @MinLength(10)
   @MaxLength(255)
@@ -25,12 +27,14 @@ export class UpdateCategoryDto {
   description?: string;
 
   @IsString()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
   @IsNotEmpty()
   @Length(1)
   @IsOptional()
   icon?: string;
 
   @IsString()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
   @IsNotEmpty()
   @Matches(/^#[0-9A-Fa-f]{6}$/)
   @IsOptional()

@@ -10,11 +10,11 @@ import {
 
 import { usersTable } from "@/modules/db/schema";
 import { CategoryService } from "@/modules/category/category.service";
-import { CreateCategoryDto } from "@/modules/category/dto/create-category.dto";
+import { GetCategoriesDto } from "@/modules/category/dtos/get-categories-dto";
+import { CreateCategoryDto } from "@/modules/category/dtos/create-category.dto";
+import { UpdateCategoryByIdDto } from "@/modules/category/dtos/update-category-by-id.dto";
 import { CurrentUser } from "@/modules/auth/decorators/current-user.decorator";
-import { GetCategoriesDto } from "@/modules/category/dto/get-categories-dto";
-import { GetCategoryByIdDto } from "@/modules/category/dto/get-category-by-id.dto";
-import { UpdateCategoryDto } from "@/modules/category/dto/update-category.dto copy";
+import { GetCategoryByIdDto } from "@/modules/category/dtos/get-category-by-id.dto";
 
 @Controller("categories")
 export class CategoryController {
@@ -50,7 +50,7 @@ export class CategoryController {
   @Patch(":categoryId")
   updateCategoryById(
     @Param() param: GetCategoryByIdDto,
-    @Body() dto: UpdateCategoryDto,
+    @Body() dto: UpdateCategoryByIdDto,
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
     return this.categoryService.updateCategoryById(
