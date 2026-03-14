@@ -36,17 +36,17 @@ import { Textarea } from "@repo/ui/components/textarea";
 import { EmojiPicker } from "@/components/emoji-picker";
 
 import { cn } from "@repo/ui/lib/utils";
-import { categoryFormSchema, CategoryFormValues } from "./schema";
 import { useCreateCategoryMutation } from "@/store/apis/category-api";
 import { categoryTypeOptions } from "@/constants/category-type-options";
+import { categoryCreateFormSchema, CategoryCreateFormValues } from "./schema";
 
 export function CategoryCreateForm() {
   const [createCategory] = useCreateCategoryMutation();
 
-  const form = useForm<CategoryFormValues>({
-    resolver: zodResolver(categoryFormSchema),
+  const form = useForm<CategoryCreateFormValues>({
+    resolver: zodResolver(categoryCreateFormSchema),
     defaultValues: {
-      categoryType: "",
+      type: "",
       title: "",
       description: "",
       icon: "",
@@ -54,7 +54,7 @@ export function CategoryCreateForm() {
     },
   });
 
-  async function handleFormSubmit(values: CategoryFormValues) {
+  async function handleFormSubmit(values: CategoryCreateFormValues) {
     try {
       await createCategory(values).unwrap();
       toast.success("Create category successfully");
@@ -68,7 +68,7 @@ export function CategoryCreateForm() {
     <form onSubmit={form.handleSubmit(handleFormSubmit)}>
       <FieldGroup className="gap-4">
         <Controller
-          name="categoryType"
+          name="type"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>

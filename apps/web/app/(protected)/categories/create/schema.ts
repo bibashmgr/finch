@@ -1,7 +1,7 @@
 import z from "zod";
 
-export const categoryFormSchema = z.object({
-  categoryType: z.string().nonempty({
+export const categoryCreateFormSchema = z.object({
+  type: z.string().nonempty({
     error: "Please select an option.",
   }),
   title: z
@@ -35,4 +35,4 @@ export const categoryFormSchema = z.object({
     .regex(/^#[0-9A-Fa-f]{6}$/, "Color is invalid"),
 });
 
-export type CategoryFormValues = z.infer<typeof categoryFormSchema>;
+export type CategoryCreateFormValues = z.infer<typeof categoryCreateFormSchema>;

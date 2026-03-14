@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -36,13 +37,12 @@ import { Textarea } from "@repo/ui/components/textarea";
 import { EmojiPicker } from "@/components/emoji-picker";
 
 import { cn } from "@repo/ui/lib/utils";
-import { categoryFormSchema, CategoryFormValues } from "./schema";
 import {
   useGetCategoryByIdQuery,
   useUpdateCategoryMutation,
 } from "@/store/apis/category-api";
 import { categoryTypeOptions } from "@/constants/category-type-options";
-import { useParams } from "next/navigation";
+import { categoryEditFormSchema, CategoryEditFormValues } from "./schema";
 
 export function CategoryEditForm() {
   const params = useParams<{ categoryId: string }>();
@@ -54,10 +54,10 @@ export function CategoryEditForm() {
   } = useGetCategoryByIdQuery(params.categoryId);
   const [updateCategory] = useUpdateCategoryMutation();
 
-  const form = useForm<CategoryFormValues>({
-    resolver: zodResolver(categoryFormSchema),
+  const form = useForm<CategoryEditFormValues>({
+    resolver: zodResolver(categoryEditFormSchema),
     defaultValues: {
-      categoryType: "",
+      type: "",
       title: "",
       description: "",
       icon: "",
@@ -65,9 +65,9 @@ export function CategoryEditForm() {
     },
   });
 
-  async function handleFormSubmit(values: CategoryFormValues) {
+  async function handleFormSubmit(values: CategoryEditFormValues) {
     try {
-      const { categoryType, ...others } = values;
+      const { type, ...others } = values;
 
       await updateCategory({
         id: params.categoryId,
@@ -83,7 +83,7 @@ export function CategoryEditForm() {
   React.useEffect(() => {
     if (category) {
       form.reset({
-        categoryType: category.categoryType,
+        type: category.type,
         title: category.title,
         description: category.description,
         icon: category.icon,
@@ -104,7 +104,7 @@ export function CategoryEditForm() {
     <form onSubmit={form.handleSubmit(handleFormSubmit)}>
       <FieldGroup className="gap-4">
         <Controller
-          name="categoryType"
+          name="type"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
@@ -120,7 +120,7 @@ export function CategoryEditForm() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    {categoryTypeOptions.map((option, index) => {
+                    {categoryTypeOptions.map((option) => {
                       return (
                         <SelectItem key={option.value} value={option.value}>
                           {option.label}

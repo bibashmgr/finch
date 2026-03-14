@@ -6,7 +6,7 @@ export enum CategoryTypeEnum {
 export type Category = {
   id: string;
   userId: string;
-  categoryType: CategoryTypeEnum;
+  type: CategoryTypeEnum;
   title: string;
   description: string;
   icon: string;
@@ -16,7 +16,7 @@ export type Category = {
 };
 
 export type CategoryCreateInput = {
-  categoryType: string;
+  type: string;
   title: string;
   description: string;
   icon: string;

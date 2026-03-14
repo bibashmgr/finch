@@ -50,12 +50,12 @@ export function CategoryList() {
               <Badge
                 className={cn(
                   "capitalize",
-                  category.categoryType === CategoryTypeEnum.EXPENSE
+                  category.type === CategoryTypeEnum.EXPENSE
                     ? "bg-destructive"
                     : "bg-teal-500",
                 )}
               >
-                {category.categoryType}
+                {category.type}
               </Badge>
             </div>
           </Link>
