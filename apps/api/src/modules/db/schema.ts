@@ -149,7 +149,7 @@ const assetsTable = pgTable(
 
 const themeEnum = pgEnum("theme", ["light", "dark", "system"]);
 
-const currencyEnum = pgEnum("currency", ["usd", "aud", "npr"]);
+const currencyEnum = pgEnum("currency", ["npr"]);
 
 const languageEnum = pgEnum("language", ["en", "ne"]);
 
@@ -163,7 +163,7 @@ const settingsTable = pgTable(
       .notNull()
       .unique(),
 
-    currency: currencyEnum("currency").default("usd").notNull(),
+    currency: currencyEnum("currency").default("npr").notNull(),
     language: languageEnum("language").default("en").notNull(),
     theme: themeEnum("theme").default("system").notNull(),
 
