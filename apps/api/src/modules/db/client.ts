@@ -9,12 +9,10 @@ import * as relation from "./relation";
 
 let connectionString = process.env.DATABASE_URL;
 
-const pool = new Pool({
-  connectionString,
-});
+const client = new Pool({ connectionString });
 
 const db = drizzle({
-  client: pool,
+  client,
   schema: { ...schema, ...relation },
 });
 
