@@ -25,7 +25,10 @@ export class CategoryController {
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
     @Query() query: GetCategoriesDto,
   ) {
-    return this.categoryService.getCategories(currentUser.id, query);
+    return this.categoryService.getCategories({
+      ...query,
+      userId: currentUser.id,
+    });
   }
 
   @Post()

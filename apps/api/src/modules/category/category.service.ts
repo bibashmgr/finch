@@ -15,8 +15,8 @@ export class CategoryService {
   constructor(private readonly categoryRepository: CategoryRepository) {}
 
   @Transactional()
-  async getCategories(userId: string, query: GetCategoriesDto) {
-    const filters = { userId, type: query.type };
+  async getCategories(query: Record<string, any>) {
+    const filters = { userId: query.userId, type: query.type };
     const options = {
       limit: query.limit,
       page: query.page,
