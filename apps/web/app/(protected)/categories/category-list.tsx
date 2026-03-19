@@ -1,26 +1,76 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 
-import { useGetCategoriesQuery } from "@/store/apis/category-api";
-import { Badge } from "@repo/ui/components/badge";
 import { cn } from "@repo/ui/lib/utils";
 import { CategoryTypeEnum } from "@/types/category";
-import Link from "next/link";
+import { useGetCategoriesQuery } from "@/store/apis/category-api";
+
+import { Badge } from "@repo/ui/components/badge";
+import { Skeleton } from "@repo/ui/components/skeleton";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@repo/ui/components/empty";
+import { ShapesIcon } from "lucide-react";
+import { Button } from "@repo/ui/components/button";
 
 export function CategoryList() {
   const { data, isLoading, isSuccess } = useGetCategoriesQuery();
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex flex-col gap-4">
+        {Array.from({ length: 10 }).map((_, index) => {
+          return <Skeleton key={index} className="w-full h-18" />;
+        })}
+      </div>
+    );
   }
 
   if (!isSuccess) {
-    return <p>Failed to show categories</p>;
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <ShapesIcon />
+          </EmptyMedia>
+          <EmptyTitle>Oops, categories didn&apos;t load</EmptyTitle>
+          <EmptyDescription>
+            We hit a snag while loading things. Tap retry to give it another go.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
+    );
   }
 
   if (data.results.length === 0) {
-    return <p>No categories</p>;
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <ShapesIcon />
+          </EmptyMedia>
+          <EmptyTitle>No categories found</EmptyTitle>
+          <EmptyDescription>
+            Looks like there aren&apos;t any categories to show right now. Try
+            adding one.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Link href="/categories/create">
+            <Button variant="outline" size="sm">
+              Add category
+            </Button>
+          </Link>
+        </EmptyContent>
+      </Empty>
+    );
   }
 
   return (
@@ -33,7 +83,7 @@ export function CategoryList() {
                 <div
                   className="border rounded-lg size-10 flex justify-center items-center"
                   style={{
-                    backgroundColor: `${category.color}30`,
+                    backgroundColor: `${category.color}20`,
                   }}
                 >
                   {category.icon}

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { ShapesIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +12,13 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@repo/ui/components/field";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@repo/ui/components/empty";
 import {
   Select,
   SelectContent,
@@ -35,12 +43,13 @@ import { Button } from "@repo/ui/components/button";
 import { Spinner } from "@repo/ui/components/spinner";
 import { Textarea } from "@repo/ui/components/textarea";
 import { EmojiPicker } from "@/components/emoji-picker";
+import { Skeleton } from "@repo/ui/components/skeleton";
 
-import { cn } from "@repo/ui/lib/utils";
 import {
   useGetCategoryByIdQuery,
   useUpdateCategoryMutation,
 } from "@/store/apis/category-api";
+import { cn } from "@repo/ui/lib/utils";
 import { categoryTypeOptions } from "@/constants/category-type-options";
 import { categoryEditFormSchema, CategoryEditFormValues } from "./schema";
 
@@ -93,11 +102,43 @@ export function CategoryEditForm() {
   }, [category]);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="grid grid-cols-2 gap-4">
+        {Array.from({ length: 5 }).map((_, index) => {
+          return (
+            <div
+              className={cn(
+                "space-y-2 col-span-2",
+                index + 1 >= 4 && "sm:col-span-1",
+              )}
+            >
+              <Skeleton key={index} className="w-20 h-6" />
+              <Skeleton
+                key={index}
+                className={cn("w-full h-9", index + 1 === 3 && "h-16")}
+              />
+            </div>
+          );
+        })}
+        <Skeleton className="w-full h-9 col-span-2" />
+      </div>
+    );
   }
 
   if (!isSuccess) {
-    return <p>Error</p>;
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <ShapesIcon />
+          </EmptyMedia>
+          <EmptyTitle>Oops, category didn&apos;t load</EmptyTitle>
+          <EmptyDescription>
+            We hit a snag while loading things. Tap retry to give it another go.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
+    );
   }
 
   return (
