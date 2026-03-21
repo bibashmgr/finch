@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { Transactional } from "@nestjs-cls/transactional";
 
 import { CategoryRepository } from "@/modules/category/category.repository";
 import { CreateCategoryDto } from "@/modules/category/dtos/create-category.dto";

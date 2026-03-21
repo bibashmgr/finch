@@ -1,4 +1,3 @@
-import { ClsModule } from "nestjs-cls";
 import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 import { LoggerModule } from "nestjs-pino";
@@ -15,7 +14,6 @@ import { SettingModule } from "@/modules/setting/setting.module";
 import { CategoryModule } from "@/modules/category/category.module";
 import { TransactionModule } from "@/modules/transaction/transaction.module";
 
-import { createClsConfig } from "@/config/cls.config";
 import { createMailConfig } from "@/config/mail.config";
 import { createEnvConfig, Env } from "@/config/env.config";
 import { createLoggerConfig } from "@/config/logger.config";
@@ -25,7 +23,6 @@ import { createThrollerConfig } from "@/config/throttler.config";
   imports: [
     ConfigModule.forRoot(createEnvConfig()),
     DbModule,
-    ClsModule.forRoot(createClsConfig()),
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
