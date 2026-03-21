@@ -6,7 +6,6 @@ import {
 import { Transactional } from "@nestjs-cls/transactional";
 
 import { SettingRepository } from "@/modules/setting/setting.repository";
-import { GetTransactionsDto } from "@/modules/transaction/dtos/get-transactions-dto";
 import { TransactionRepository } from "@/modules/transaction/transaction.repository";
 import { CreateTransactionDto } from "@/modules/transaction/dtos/create-transaction.dto";
 import { UpdateTransactionByIdDto } from "@/modules/transaction/dtos/update-transaction-by-id.dto";
@@ -76,7 +75,7 @@ export class TransactionService {
   @Transactional()
   async getTransactionById(transactionId: string, userId: string) {
     const transaction =
-      await this.transactionRepository.findById(transactionId);
+      await this.transactionRepository.findByIdWithDetails(transactionId);
 
     if (!transaction) {
       throw new NotFoundException("Transaction not found");
@@ -96,7 +95,7 @@ export class TransactionService {
     userId: string,
   ) {
     const transaction =
-      await this.transactionRepository.findById(transactionId);
+      await this.transactionRepository.findByIdWithAttachments(transactionId);
 
     if (!transaction) {
       throw new NotFoundException("Transaction not found");
@@ -106,6 +105,22 @@ export class TransactionService {
       throw new ForbiddenException("Access denied");
     }
 
-    return await this.transactionRepository.updateById(transactionId, dto);
+    let userSetting = await this.settingRepository.findByUserId(userId);
+
+    if (!userSetting) {
+      userSetting = await this.settingRepository.create({
+        userId,
+      });
+    }
+
+    const { amount, issuedAt, attachments, ...otherDto } = dto;
+
+    return await this.transactionRepository.updateById(transactionId, {
+      userId,
+      currency: userSetting.currency,
+      amount: amount.toString(),
+      issuedAt: new Date(dto.issuedAt),
+      ...otherDto,
+    });
   }
 }

@@ -138,6 +138,18 @@ export class TransactionRepository {
     return transaction;
   }
 
+  async findByIdWithDetails(id: string) {
+    const transaction = await this.txHost.tx.query.transactionsTable.findFirst({
+      where: eq(transactionsTable.id, id),
+      with: {
+        attachments: true,
+        category: true,
+      },
+    });
+
+    return transaction;
+  }
+
   async updateById(
     id: string,
     payload: Partial<typeof transactionsTable.$inferInsert>,
