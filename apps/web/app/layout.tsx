@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Courier_Prime, Open_Sans } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 
 import { siteConfig } from "@/constants/site-config";
 
@@ -12,12 +12,13 @@ import { SettingProvider } from "./_components/setting-provider";
 
 import "@repo/ui/globals.css";
 
-const fontSans = Open_Sans({
+const fontSans = Geist({
   variable: "--font-sans",
+  subsets: ["latin"],
 });
-const fontMono = Courier_Prime({
+const fontMono = Geist_Mono({
   variable: "--font-mono",
-  weight: ["400", "700"],
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {

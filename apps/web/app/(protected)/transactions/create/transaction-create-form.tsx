@@ -6,9 +6,6 @@ import { CalendarIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { transactionFormSchema, TransactionFormValues } from "../schema";
-import { paymentMethodOptions } from "@/constants/payment-method-options";
-
 import {
   Field,
   FieldError,
@@ -28,16 +25,40 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@repo/ui/components/popover";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@repo/ui/components/combobox";
 import { Input } from "@repo/ui/components/input";
+import { toast } from "@repo/ui/components/sonner";
 import { Button } from "@repo/ui/components/button";
 import { Spinner } from "@repo/ui/components/spinner";
 import { Textarea } from "@repo/ui/components/textarea";
 import { Calendar } from "@repo/ui/components/calendar";
 
-export function TransactionForm() {
-  const form = useForm<TransactionFormValues>({
-    resolver: zodResolver(transactionFormSchema),
+import {
+  transactionCreateFormSchema,
+  TransactionCreateFormValues,
+} from "./schema";
+import { cn } from "@repo/ui/lib/utils";
+import { Category } from "@/types/category";
+import { useGetCategoriesQuery } from "@/store/apis/category-api";
+import { categoryTypeOptions } from "@/constants/category-type-options";
+import { paymentMethodOptions } from "@/constants/payment-method-options";
+import { useCreateTransactionMutation } from "@/store/apis/transaction-api";
+
+export function TransactionCreateForm() {
+  const { data: categories } = useGetCategoriesQuery("limit=100&page=1");
+  const [createTransaction] = useCreateTransactionMutation();
+
+  const form = useForm<TransactionCreateFormValues>({
+    resolver: zodResolver(transactionCreateFormSchema),
     defaultValues: {
+      type: "",
       categoryId: "",
       amount: "",
       notes: "",
@@ -47,7 +68,22 @@ export function TransactionForm() {
     },
   });
 
-  function handleFormSubmit(values: TransactionFormValues) {}
+  async function handleFormSubmit(values: TransactionCreateFormValues) {
+    try {
+      const { type, ...others } = values;
+      await createTransaction({
+        ...others,
+        amount: parseFloat(others.amount),
+        issuedAt: others.issuedAt
+          ? others.issuedAt.toISOString()
+          : new Date().toISOString(),
+      }).unwrap();
+      form.reset();
+      toast.success("Transaction created successfully");
+    } catch {
+      toast.error("Failed to create transaction");
+    }
+  }
 
   return (
     <form
@@ -56,6 +92,78 @@ export function TransactionForm() {
       onSubmit={form.handleSubmit(handleFormSubmit)}
     >
       <FieldGroup>
+        <Controller
+          name="type"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="type">Type</FieldLabel>
+              <Select
+                key={field.value}
+                value={field.value}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  form.setValue("categoryId", "");
+                }}
+              >
+                <SelectTrigger aria-invalid={fieldState.invalid}>
+                  <SelectValue placeholder="Select an option" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {categoryTypeOptions.map((option) => {
+                      return (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="categoryId"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="categoryId">Category</FieldLabel>
+              <Combobox
+                items={categories?.results.filter(
+                  (i) => i.type === form.watch("type"),
+                )}
+                itemToStringLabel={(item: Category) => item.title}
+                itemToStringValue={(item: Category) => item.id}
+                value={
+                  categories?.results.find((i) => i.id === field.value) ?? null
+                }
+                onValueChange={(value) => field.onChange(value?.id)}
+              >
+                <ComboboxInput
+                  placeholder="Select an option"
+                  aria-invalid={fieldState.invalid}
+                  disabled={!form.watch("type")}
+                />
+                <ComboboxContent>
+                  <ComboboxEmpty>No categories found.</ComboboxEmpty>
+                  <ComboboxList>
+                    {(item) => (
+                      <ComboboxItem key={item.id} value={item}>
+                        {item.title}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
         <Controller
           name="amount"
           control={form.control}
@@ -111,7 +219,10 @@ export function TransactionForm() {
                   <Button
                     variant="outline"
                     data-empty={!field.value}
-                    className="justify-between font-normal"
+                    className={cn(
+                      "justify-between font-normal",
+                      fieldState.invalid && "border-destructive!",
+                    )}
                   >
                     {field.value ? (
                       format(field.value, "PPP")

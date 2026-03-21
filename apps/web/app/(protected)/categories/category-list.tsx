@@ -25,7 +25,7 @@ export function CategoryList() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3">
         {Array.from({ length: 10 }).map((_, index) => {
           return <Skeleton key={index} className="w-full h-18" />;
         })}
@@ -42,7 +42,8 @@ export function CategoryList() {
           </EmptyMedia>
           <EmptyTitle>Oops, categories didn&apos;t load</EmptyTitle>
           <EmptyDescription>
-            We hit a snag while loading things. Tap retry to give it another go.
+            We hit a snag while loading things. Please check your connection or
+            try again.
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
@@ -64,7 +65,7 @@ export function CategoryList() {
         </EmptyHeader>
         <EmptyContent>
           <Link href="/categories/create">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" className="cursor-pointer">
               Add category
             </Button>
           </Link>
@@ -74,7 +75,7 @@ export function CategoryList() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       {data.results.map((category) => {
         return (
           <Link key={category.id} href={`/categories/${category.id}/edit`}>

@@ -1,26 +1,56 @@
 import React from "react";
-import { ShapesIcon } from "lucide-react";
+
+import { TransactionWithCategory } from "@/types/transaction";
 
 import { Card, CardContent } from "@repo/ui/components/card";
+import { useAppSelector } from "@/hooks/use-app-selector";
+import { getCurrencySymbol } from "@/utils/get-currency-symbol";
+import { cn } from "@repo/ui/lib/utils";
+import { CategoryTypeEnum } from "@/types/category";
 
-export function TransactionCard() {
+type TransactionCardProps = {
+  transaction: TransactionWithCategory;
+};
+
+export function TransactionCard({ transaction }: TransactionCardProps) {
+  const setting = useAppSelector((state) => state.setting.info);
+
   return (
     <Card className="py-4">
       <CardContent className="px-4 flex flex-row items-center justify-between gap-3">
         <div className="flex gap-3 items-center">
-          <div className="size-10 bg-amber-300 rounded-lg flex justify-center items-center shrink-0">
-            <ShapesIcon className="size-5 text-amber-700" />
+          <div
+            style={{
+              backgroundColor: `${transaction.category.color}20`,
+            }}
+            className="size-10 border rounded-lg flex justify-center items-center bg-green-500/20"
+          >
+            <p className="text-base">{transaction.category.icon}</p>
           </div>
 
           <div className="space-y-0.5">
-            <p className="text-sm font-semibold">Upwork</p>
+            <p className="text-sm font-semibold">
+              {transaction.category.title}
+            </p>
             <p className="text-xs text-muted-foreground line-clamp-1">
-              Lorem ipsum dolor &middot; 10:00 AM
+              {transaction.notes}
             </p>
           </div>
         </div>
 
-        <p className="text-lg font-bold text-teal-500 text-nowrap">+ ₹10,000</p>
+        <p
+          className={cn(
+            "text-lg font-bold text-nowrap",
+            transaction.category.type === CategoryTypeEnum.INCOME
+              ? "text-teal-500"
+              : "text-destructive",
+          )}
+        >
+          {transaction.category.type === CategoryTypeEnum.INCOME ? "+" : "-"}
+          &nbsp;
+          {getCurrencySymbol(setting?.currency!)}
+          {transaction.amount}
+        </p>
       </CardContent>
     </Card>
   );

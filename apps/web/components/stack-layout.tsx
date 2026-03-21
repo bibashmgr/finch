@@ -31,7 +31,7 @@ export function StackLayout({
 
   return (
     <div>
-      <div className="flex justify-between items-center gap-2 border-b py-4 px-4 sticky top-0 bg-background">
+      <div className="flex justify-between items-center gap-2 border-b py-4 px-4 sticky top-0 z-10 bg-background">
         <div>
           <Button
             variant="ghost"

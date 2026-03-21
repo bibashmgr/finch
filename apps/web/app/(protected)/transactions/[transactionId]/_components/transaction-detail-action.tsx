@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { EllipsisVerticalIcon } from "lucide-react";
 
 import {
@@ -15,6 +16,8 @@ import { Button } from "@repo/ui/components/button";
 import { TransactionDeleteDrawer } from "./transaction-delete-drawer";
 
 export function TransactionDetailAction() {
+  const params = useParams<{ transactionId: string }>();
+
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] =
     React.useState<boolean>(false);
 
@@ -33,7 +36,10 @@ export function TransactionDetailAction() {
 
         <DropdownMenuContent align="end">
           <DropdownMenuGroup>
-            <Link href={`/transactions/1/edit`} prefetch={false}>
+            <Link
+              href={`/transactions/${params.transactionId}/edit`}
+              prefetch={false}
+            >
               <DropdownMenuItem>Edit</DropdownMenuItem>
             </Link>
             <DropdownMenuItem onClick={() => handleDeleteDrawer(true)}>

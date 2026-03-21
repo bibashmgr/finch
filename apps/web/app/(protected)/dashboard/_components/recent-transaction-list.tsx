@@ -17,13 +17,13 @@ export function RecentTransactionList() {
       </div>
 
       <div className="flex flex-col gap-3">
-        {Array.from({ length: 10 }).map((_, index) => {
+        {/* {Array.from({ length: 10 }).map((_, index) => {
           return (
             <Link key={index} href={`/transactions/1`} prefetch={false}>
               <TransactionCard />
             </Link>
           );
-        })}
+        })} */}
       </div>
     </section>
   );

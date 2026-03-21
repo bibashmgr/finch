@@ -107,14 +107,14 @@ export function CategoryEditForm() {
         {Array.from({ length: 5 }).map((_, index) => {
           return (
             <div
+              key={index}
               className={cn(
                 "space-y-2 col-span-2",
                 index + 1 >= 4 && "sm:col-span-1",
               )}
             >
-              <Skeleton key={index} className="w-20 h-6" />
+              <Skeleton className="w-20 h-6" />
               <Skeleton
-                key={index}
                 className={cn("w-full h-9", index + 1 === 3 && "h-16")}
               />
             </div>
@@ -134,7 +134,8 @@ export function CategoryEditForm() {
           </EmptyMedia>
           <EmptyTitle>Oops, category didn&apos;t load</EmptyTitle>
           <EmptyDescription>
-            We hit a snag while loading things. Tap retry to give it another go.
+            We hit a snag while loading things. Please check your connection or
+            try again.
           </EmptyDescription>
         </EmptyHeader>
       </Empty>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import { Metadata } from "next";
 import { FileChartLineIcon, ChevronRightIcon } from "lucide-react";
@@ -21,7 +21,9 @@ export default function TransactionListPage() {
   return (
     <main className="px-4">
       <div className="sticky top-0 space-y-4 py-4 bg-background">
-        <TransactionListHeader />
+        <Suspense fallback={null}>
+          <TransactionListHeader />
+        </Suspense>
 
         <Item variant="outline" size="sm" asChild>
           <Link href="/report" prefetch={false}>
@@ -38,7 +40,9 @@ export default function TransactionListPage() {
         </Item>
       </div>
 
-      <TransactionList />
+      <Suspense fallback={null}>
+        <TransactionList />
+      </Suspense>
 
       <div className="py-11" />
     </main>

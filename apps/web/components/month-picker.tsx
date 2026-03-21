@@ -73,7 +73,7 @@ export function MonthPicker({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className="w-48 justify-between">
           {months[value.getMonth()]?.short} {value.getFullYear()}
           <ChevronDownIcon />
         </Button>

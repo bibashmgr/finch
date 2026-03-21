@@ -6,7 +6,7 @@ type CurrencyOption = {
 };
 
 export const currencyOptions: CurrencyOption[] = [
-  { code: "usd", name: "United State Dollar", countryCode: "us", symbol: "$" },
-  { code: "aud", name: "Australian Dollar", countryCode: "au", symbol: "$" },
-  { code: "npr", name: "Nepalese Rupee", countryCode: "np", symbol: "₹" },
+  // { code: "usd", name: "United State Dollar", countryCode: "us", symbol: "$" },
+  // { code: "aud", name: "Australian Dollar", countryCode: "au", symbol: "$" },
+  { code: "npr", name: "Nepalese Rupee", countryCode: "np", symbol: "रू" },
 ];
