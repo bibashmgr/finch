@@ -7,12 +7,17 @@ import { useAppSelector } from "@/hooks/use-app-selector";
 import { getCurrencySymbol } from "@/utils/get-currency-symbol";
 import { cn } from "@repo/ui/lib/utils";
 import { CategoryTypeEnum } from "@/types/category";
+import { format } from "date-fns";
 
 type TransactionCardProps = {
   transaction: TransactionWithCategory;
+  showDate?: boolean;
 };
 
-export function TransactionCard({ transaction }: TransactionCardProps) {
+export function TransactionCard({
+  transaction,
+  showDate = false,
+}: TransactionCardProps) {
   const setting = useAppSelector((state) => state.setting.info);
 
   return (
@@ -34,6 +39,7 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
             </p>
             <p className="text-xs text-muted-foreground line-clamp-1">
               {transaction.notes}
+              {showDate && ` · ${format(transaction.issuedAt, "dd MMM, yyyy")}`}
             </p>
           </div>
         </div>
@@ -48,7 +54,7 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
         >
           {transaction.category.type === CategoryTypeEnum.INCOME ? "+" : "-"}
           &nbsp;
-          {getCurrencySymbol(setting?.currency!)}
+          {getCurrencySymbol(setting?.currency)}
           {transaction.amount}
         </p>
       </CardContent>

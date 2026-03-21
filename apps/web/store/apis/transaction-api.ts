@@ -38,7 +38,10 @@ const transactionApi = apiSlice.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: [{ type: "Transactions", id: "PARTIAL-LIST" }],
+      invalidatesTags: [
+        { type: "Transactions", id: "PARTIAL-LIST" },
+        "DashboardSummary",
+      ],
     }),
 
     getTransactionById: builder.query<TransactionWithDetails, string>({
@@ -61,6 +64,7 @@ const transactionApi = apiSlice.injectEndpoints({
       invalidatesTags: (response) => [
         { type: "Transactions", id: response?.id },
         { type: "Transactions", id: "PARTIAL-LIST" },
+        "DashboardSummary",
       ],
     }),
   }),

@@ -26,7 +26,7 @@ export function CategoryList() {
   if (isLoading) {
     return (
       <div className="flex flex-col gap-3">
-        {Array.from({ length: 10 }).map((_, index) => {
+        {Array.from({ length: 5 }).map((_, index) => {
           return <Skeleton key={index} className="w-full h-18" />;
         })}
       </div>

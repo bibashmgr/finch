@@ -1,4 +1,8 @@
-function getCurrencySymbol(currencyCode: string): string {
+function getCurrencySymbol(currencyCode: string | undefined): string {
+  if (!currencyCode) {
+    return "";
+  }
+
   switch (currencyCode) {
     case "usd":
       return "$";

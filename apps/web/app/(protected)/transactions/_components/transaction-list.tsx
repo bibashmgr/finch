@@ -67,7 +67,7 @@ export function TransactionList() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        {Array.from({ length: 4 }).map((_, index) => {
+        {Array.from({ length: 2 }).map((_, index) => {
           return (
             <div key={index} className="space-y-4">
               <Skeleton className="w-28 h-6" />
