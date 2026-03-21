@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { and, asc, count, desc, eq, gte, lte } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, lte, sql, sum } from "drizzle-orm";
 
 import { DB } from "@/modules/db/client";
 import { InjectDb } from "@/modules/db/db.provider";
@@ -31,10 +31,13 @@ export class TransactionRepository {
 
     if (filters.startDate && filters.endDate) {
       conditions.push(
-        and(
-          gte(transactionsTable.issuedAt, new Date(filters.startDate)),
-          lte(transactionsTable.issuedAt, new Date(filters.endDate)),
-        ),
+        gte(transactionsTable.issuedAt, new Date(filters.startDate)),
+      );
+    }
+
+    if (filters.endDate) {
+      conditions.push(
+        lte(transactionsTable.issuedAt, new Date(filters.endDate)),
       );
     }
 
@@ -160,5 +163,43 @@ export class TransactionRepository {
       .where(eq(transactionsTable.id, id))
       .returning();
     return transaction;
+  }
+
+  async getTotalIncome(userId: string, startDate: Date, endDate: Date) {
+    const [totalIncomeResult] = await this.db
+      .select({ total: sum(transactionsTable.amount) })
+      .from(transactionsTable)
+      .innerJoin(
+        categoriesTable,
+        eq(transactionsTable.categoryId, categoriesTable.id),
+      )
+      .where(
+        and(
+          eq(transactionsTable.userId, userId),
+          eq(categoriesTable.type, "income"),
+          gte(transactionsTable.issuedAt, startDate),
+          lte(transactionsTable.issuedAt, endDate),
+        ),
+      );
+    return totalIncomeResult;
+  }
+
+  async getTotalExpense(userId: string, startDate: Date, endDate: Date) {
+    const [totalExpenseResult] = await this.db
+      .select({ total: sum(transactionsTable.amount) })
+      .from(transactionsTable)
+      .innerJoin(
+        categoriesTable,
+        eq(transactionsTable.categoryId, categoriesTable.id),
+      )
+      .where(
+        and(
+          eq(transactionsTable.userId, userId),
+          eq(categoriesTable.type, "expense"),
+          gte(transactionsTable.issuedAt, startDate),
+          lte(transactionsTable.issuedAt, endDate),
+        ),
+      );
+    return totalExpenseResult;
   }
 }

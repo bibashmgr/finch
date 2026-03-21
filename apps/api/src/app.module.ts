@@ -12,6 +12,7 @@ import { AssetModule } from "@/modules/asset/asset.module";
 import { HealthModule } from "@/modules/health/health.module";
 import { SettingModule } from "@/modules/setting/setting.module";
 import { CategoryModule } from "@/modules/category/category.module";
+import { DashboardModule } from "@/modules/dashboard/dashboard.module";
 import { TransactionModule } from "@/modules/transaction/transaction.module";
 
 import { createMailConfig } from "@/config/mail.config";
@@ -48,6 +49,7 @@ import { createThrollerConfig } from "@/config/throttler.config";
     SettingModule,
     CategoryModule,
     TransactionModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [

@@ -10,5 +10,6 @@ import { TransactionAttachmentModule } from "@/modules/transaction-attachment/tr
   imports: [SettingModule, TransactionAttachmentModule],
   controllers: [TransactionController],
   providers: [TransactionRepository, TransactionService],
+  exports: [TransactionRepository],
 })
 export class TransactionModule {}
