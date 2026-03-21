@@ -3,12 +3,12 @@
 import * as streamifier from "streamifier";
 import { Injectable } from "@nestjs/common";
 import { v2 as cloudinary } from "cloudinary";
+import { ConfigService } from "@nestjs/config";
 
 import {
   CloudinaryDeleteResponse,
   CloudinaryUploadResponse,
 } from "@/modules/cloudinary/entities/cloudinary.type";
-import { ConfigService } from "@nestjs/config";
 import { Env } from "@/config/env.config";
 
 @Injectable()

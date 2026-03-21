@@ -1,18 +1,18 @@
 import { Injectable } from "@nestjs/common";
-import { TransactionHost } from "@nestjs-cls/transactional";
-
-import { DbTransactionAdapter } from "@/modules/db/client";
-import { verificationCodesTable } from "@/modules/db/schema";
 import { and, eq, gt, isNull } from "drizzle-orm";
+
+import { DB } from "@/modules/db/client";
+import { InjectDb } from "@/modules/db/db.provider";
+import { verificationCodesTable } from "@/modules/db/schema";
 
 @Injectable()
 export class OtpRepository {
-  constructor(private readonly txHost: TransactionHost<DbTransactionAdapter>) {}
+  constructor(@InjectDb() private readonly db: DB) {}
 
   async saveVerificationCode(
     payload: typeof verificationCodesTable.$inferInsert,
   ) {
-    const [verificationCode] = await this.txHost.tx
+    const [verificationCode] = await this.db
       .insert(verificationCodesTable)
       .values(payload)
       .returning();
@@ -22,7 +22,7 @@ export class OtpRepository {
   async findValidVerificationCodes(email: string) {
     const now = new Date();
 
-    const verificationCodes = await this.txHost.tx
+    const verificationCodes = await this.db
       .select()
       .from(verificationCodesTable)
       .where(
@@ -39,7 +39,7 @@ export class OtpRepository {
     id: string,
     payload: Partial<typeof verificationCodesTable.$inferInsert>,
   ) {
-    const [verificationCode] = await this.txHost.tx
+    const [verificationCode] = await this.db
       .update(verificationCodesTable)
       .set({ ...payload })
       .where(eq(verificationCodesTable.id, id))

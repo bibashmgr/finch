@@ -1,4 +1,3 @@
-import { Transactional } from "@nestjs-cls/transactional";
 import { Injectable, NotFoundException } from "@nestjs/common";
 
 import { AssetRepository } from "@/modules/asset/asset.repository";
@@ -11,7 +10,6 @@ export class AssetService {
     private readonly assetRepository: AssetRepository,
   ) {}
 
-  @Transactional()
   async uploadAsset(userId: string, file: Express.Multer.File) {
     const response = await this.cloudinaryService.upload(file);
     const asset = await this.assetRepository.create({
@@ -29,7 +27,6 @@ export class AssetService {
     return asset;
   }
 
-  @Transactional()
   async deleteAsset(id: string) {
     const asset = await this.assetRepository.findById(id);
 

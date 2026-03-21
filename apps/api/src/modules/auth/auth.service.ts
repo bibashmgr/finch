@@ -1,4 +1,3 @@
-import { Transactional } from "@nestjs-cls/transactional";
 import {
   Injectable,
   InternalServerErrorException,
@@ -22,14 +21,12 @@ export class AuthService {
     private readonly accountRepository: AccountRepository,
   ) {}
 
-  @Transactional()
   async loginWithEmail(email: string) {
     const code = await this.otpService.saveOtpCode(email);
     await this.mailService.sendEmailVerificationMail(email, code);
     return { message: "Verification code sent successfully" };
   }
 
-  @Transactional()
   async verifyEmail(email: string, code: string) {
     await this.otpService.verifyOtpCode(email, code);
 
@@ -58,7 +55,6 @@ export class AuthService {
     return await this.tokenService.issueAuthTokens(user.id);
   }
 
-  @Transactional()
   async handleGoogleCallback(user: typeof usersTable.$inferSelect | null) {
     if (!user) {
       throw new InternalServerErrorException("Failed to login with google");
@@ -67,7 +63,6 @@ export class AuthService {
     return await this.tokenService.issueAuthTokens(user.id);
   }
 
-  @Transactional()
   async refreshToken(token: string | undefined) {
     if (!token) {
       throw new NotFoundException("Refresh token is not provided");
@@ -76,7 +71,6 @@ export class AuthService {
     return await this.tokenService.rotateRefreshTokens(token);
   }
 
-  @Transactional()
   async logoutUser(token: string | undefined) {
     if (!token) {
       throw new NotFoundException("Refresh token is not provided");

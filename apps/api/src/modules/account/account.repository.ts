@@ -1,16 +1,16 @@
 import { and, eq } from "drizzle-orm";
 import { Injectable } from "@nestjs/common";
-import { TransactionHost } from "@nestjs-cls/transactional";
 
+import { DB } from "@/modules/db/client";
 import { accountsTable } from "@/modules/db/schema";
-import { DbTransactionAdapter } from "@/modules/db/client";
+import { InjectDb } from "@/modules/db/db.provider";
 
 @Injectable()
 export class AccountRepository {
-  constructor(private readonly txHost: TransactionHost<DbTransactionAdapter>) {}
+  constructor(@InjectDb() private readonly db: DB) {}
 
   async create(payload: typeof accountsTable.$inferInsert) {
-    const [account] = await this.txHost.tx
+    const [account] = await this.db
       .insert(accountsTable)
       .values(payload)
       .returning();
@@ -21,7 +21,7 @@ export class AccountRepository {
     provider: "google" | "email",
     providerAccountId: string,
   ) {
-    const [account] = await this.txHost.tx
+    const [account] = await this.db
       .select()
       .from(accountsTable)
       .where(

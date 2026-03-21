@@ -1,16 +1,16 @@
-import { Injectable } from "@nestjs/common";
-import { TransactionHost } from "@nestjs-cls/transactional";
-
-import { assetsTable } from "@/modules/db/schema";
-import { DbTransactionAdapter } from "@/modules/db/client";
 import { eq } from "drizzle-orm";
+import { Injectable } from "@nestjs/common";
+
+import { DB } from "@/modules/db/client";
+import { assetsTable } from "@/modules/db/schema";
+import { InjectDb } from "@/modules/db/db.provider";
 
 @Injectable()
 export class AssetRepository {
-  constructor(private readonly txHost: TransactionHost<DbTransactionAdapter>) {}
+  constructor(@InjectDb() private readonly db: DB) {}
 
   async create(payload: typeof assetsTable.$inferInsert) {
-    const [asset] = await this.txHost.tx
+    const [asset] = await this.db
       .insert(assetsTable)
       .values(payload)
       .returning();
@@ -18,7 +18,7 @@ export class AssetRepository {
   }
 
   async findById(id: string) {
-    const [asset] = await this.txHost.tx
+    const [asset] = await this.db
       .select()
       .from(assetsTable)
       .where(eq(assetsTable.id, id))
@@ -27,7 +27,7 @@ export class AssetRepository {
   }
 
   async findByUrl(url: string) {
-    const [asset] = await this.txHost.tx
+    const [asset] = await this.db
       .select()
       .from(assetsTable)
       .where(eq(assetsTable.url, url))
@@ -36,7 +36,7 @@ export class AssetRepository {
   }
 
   async findByPublicId(publicId: string) {
-    const [asset] = await this.txHost.tx
+    const [asset] = await this.db
       .select()
       .from(assetsTable)
       .where(eq(assetsTable.publicId, publicId))
@@ -45,7 +45,7 @@ export class AssetRepository {
   }
 
   async update(id: string, payload: Partial<typeof assetsTable.$inferInsert>) {
-    const [asset] = await this.txHost.tx
+    const [asset] = await this.db
       .update(assetsTable)
       .set({ ...payload })
       .where(eq(assetsTable.id, id))

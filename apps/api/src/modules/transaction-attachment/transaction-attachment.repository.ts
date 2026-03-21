@@ -1,15 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import { TransactionHost } from "@nestjs-cls/transactional";
 
-import { DbTransactionAdapter } from "@/modules/db/client";
+import { DB } from "@/modules/db/client";
+import { InjectDb } from "@/modules/db/db.provider";
 import { transactionAttachmentsTable } from "@/modules/db/schema";
 
 @Injectable()
 export class TransactionAttachmentRepository {
-  constructor(private readonly txHost: TransactionHost<DbTransactionAdapter>) {}
+  constructor(@InjectDb() private readonly db: DB) {}
 
   async create(payload: typeof transactionAttachmentsTable.$inferInsert) {
-    const [transaction] = await this.txHost.tx
+    const [transaction] = await this.db
       .insert(transactionAttachmentsTable)
       .values(payload)
       .returning();
@@ -19,7 +19,7 @@ export class TransactionAttachmentRepository {
   async createMany(
     payload: (typeof transactionAttachmentsTable.$inferInsert)[],
   ) {
-    const [transaction] = await this.txHost.tx
+    const [transaction] = await this.db
       .insert(transactionAttachmentsTable)
       .values(payload)
       .returning();

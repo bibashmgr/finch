@@ -1,28 +1,25 @@
 import { eq } from "drizzle-orm";
 import { Injectable } from "@nestjs/common";
-import { TransactionHost } from "@nestjs-cls/transactional";
 
+import { DB } from "@/modules/db/client";
 import { usersTable } from "@/modules/db/schema";
-import { DbTransactionAdapter } from "@/modules/db/client";
+import { InjectDb } from "@/modules/db/db.provider";
 
 @Injectable()
 export class UsersRepository {
-  constructor(private readonly txHost: TransactionHost<DbTransactionAdapter>) {}
+  constructor(@InjectDb() private readonly db: DB) {}
 
   async create(
     data: typeof usersTable.$inferInsert,
   ): Promise<typeof usersTable.$inferSelect> {
-    const [user] = await this.txHost.tx
-      .insert(usersTable)
-      .values(data)
-      .returning();
+    const [user] = await this.db.insert(usersTable).values(data).returning();
     return user;
   }
 
   async findByEmail(
     email: string,
   ): Promise<typeof usersTable.$inferSelect | undefined> {
-    const [user] = await this.txHost.tx
+    const [user] = await this.db
       .select()
       .from(usersTable)
       .where(eq(usersTable.email, email))
@@ -33,7 +30,7 @@ export class UsersRepository {
   async findById(
     id: string,
   ): Promise<typeof usersTable.$inferSelect | undefined> {
-    const [user] = await this.txHost.tx
+    const [user] = await this.db
       .select()
       .from(usersTable)
       .where(eq(usersTable.id, id))
@@ -45,7 +42,7 @@ export class UsersRepository {
     id: string,
     payload: Partial<typeof usersTable.$inferInsert>,
   ): Promise<typeof usersTable.$inferSelect | undefined> {
-    const [user] = await this.txHost.tx
+    const [user] = await this.db
       .update(usersTable)
       .set({ ...payload })
       .where(eq(usersTable.id, id))

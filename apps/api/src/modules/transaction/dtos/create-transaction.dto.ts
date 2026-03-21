@@ -4,9 +4,11 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from "class-validator";
 import { Transform } from "class-transformer";
+
 import { PaymentMethodEnum } from "../entities/payment-method.enum";
 
 export class CreateTransactionDto {
@@ -29,5 +31,6 @@ export class CreateTransactionDto {
 
   @IsArray()
   @IsString({ each: true })
+  @IsOptional()
   attachments?: string[];
 }

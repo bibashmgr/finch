@@ -1,18 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { and, asc, count, desc, eq, gte, lte } from "drizzle-orm";
-import { TransactionHost } from "@nestjs-cls/transactional";
 
-import { DbTransactionAdapter } from "@/modules/db/client";
+import { DB } from "@/modules/db/client";
+import { InjectDb } from "@/modules/db/db.provider";
 import { categoriesTable, transactionsTable } from "@/modules/db/schema";
 import { GetTransactionsOptions } from "@/modules/transaction/entities/get-transactions-options.type";
 import { GetTransactionsFilters } from "@/modules/transaction/entities/get-transactions-filters.type";
 
 @Injectable()
 export class TransactionRepository {
-  constructor(private readonly txHost: TransactionHost<DbTransactionAdapter>) {}
+  constructor(@InjectDb() private readonly db: DB) {}
 
   async create(payload: typeof transactionsTable.$inferInsert) {
-    const [transaction] = await this.txHost.tx
+    const [transaction] = await this.db
       .insert(transactionsTable)
       .values(payload)
       .returning();
@@ -73,7 +73,7 @@ export class TransactionRepository {
       orderConditions.push(desc(transactionsTable.issuedAt));
     }
 
-    const results = await this.txHost.tx
+    const results = await this.db
       .select({
         id: transactionsTable.id,
         userId: transactionsTable.userId,
@@ -103,7 +103,7 @@ export class TransactionRepository {
       .limit(limit)
       .offset(offset);
 
-    const [{ totalCount }] = await this.txHost.tx
+    const [{ totalCount }] = await this.db
       .select({ totalCount: count() })
       .from(transactionsTable);
 
@@ -119,7 +119,7 @@ export class TransactionRepository {
   }
 
   async findById(id: string) {
-    const [transaction] = await this.txHost.tx
+    const [transaction] = await this.db
       .select()
       .from(transactionsTable)
       .where(eq(transactionsTable.id, id))
@@ -128,7 +128,7 @@ export class TransactionRepository {
   }
 
   async findByIdWithAttachments(id: string) {
-    const transaction = await this.txHost.tx.query.transactionsTable.findFirst({
+    const transaction = await this.db.query.transactionsTable.findFirst({
       where: eq(transactionsTable.id, id),
       with: {
         attachments: true,
@@ -139,7 +139,7 @@ export class TransactionRepository {
   }
 
   async findByIdWithDetails(id: string) {
-    const transaction = await this.txHost.tx.query.transactionsTable.findFirst({
+    const transaction = await this.db.query.transactionsTable.findFirst({
       where: eq(transactionsTable.id, id),
       with: {
         attachments: true,
@@ -154,7 +154,7 @@ export class TransactionRepository {
     id: string,
     payload: Partial<typeof transactionsTable.$inferInsert>,
   ) {
-    const [transaction] = await this.txHost.tx
+    const [transaction] = await this.db
       .update(transactionsTable)
       .set({ ...payload })
       .where(eq(transactionsTable.id, id))

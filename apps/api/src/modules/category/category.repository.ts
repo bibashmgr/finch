@@ -1,18 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { and, count, desc, eq } from "drizzle-orm";
-import { TransactionHost } from "@nestjs-cls/transactional";
 
+import { DB } from "@/modules/db/client";
+import { InjectDb } from "@/modules/db/db.provider";
 import { categoriesTable } from "@/modules/db/schema";
-import { DbTransactionAdapter } from "@/modules/db/client";
 import { GetCategoriesFilters } from "@/modules/category/entities/get-categories-filters.type";
 import { GetCategoriesOptions } from "@/modules/category/entities/get-categories-options.type";
 
 @Injectable()
 export class CategoryRepository {
-  constructor(private readonly txHost: TransactionHost<DbTransactionAdapter>) {}
+  constructor(@InjectDb() private readonly db: DB) {}
 
   async create(payload: typeof categoriesTable.$inferInsert) {
-    const [category] = await this.txHost.tx
+    const [category] = await this.db
       .insert(categoriesTable)
       .values(payload)
       .returning();
@@ -33,7 +33,7 @@ export class CategoryRepository {
     const { limit = 10, page = 1 } = options;
     const offset = (page - 1) * limit;
 
-    const results = await this.txHost.tx
+    const results = await this.db
       .select()
       .from(categoriesTable)
       .where(and(...conditions))
@@ -41,7 +41,7 @@ export class CategoryRepository {
       .limit(limit)
       .offset(offset);
 
-    const [{ totalCount }] = await this.txHost.tx
+    const [{ totalCount }] = await this.db
       .select({ totalCount: count() })
       .from(categoriesTable);
 
@@ -57,7 +57,7 @@ export class CategoryRepository {
   }
 
   async findById(id: string) {
-    const [category] = await this.txHost.tx
+    const [category] = await this.db
       .select()
       .from(categoriesTable)
       .where(eq(categoriesTable.id, id))
@@ -69,7 +69,7 @@ export class CategoryRepository {
     id: string,
     payload: Partial<typeof categoriesTable.$inferInsert>,
   ) {
-    const [category] = await this.txHost.tx
+    const [category] = await this.db
       .update(categoriesTable)
       .set({ ...payload })
       .where(eq(categoriesTable.id, id))

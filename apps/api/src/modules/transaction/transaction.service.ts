@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { Transactional } from "@nestjs-cls/transactional";
 
 import { SettingRepository } from "@/modules/setting/setting.repository";
 import { TransactionRepository } from "@/modules/transaction/transaction.repository";
@@ -19,7 +18,6 @@ export class TransactionService {
     private readonly transactionAttachmentRepository: TransactionAttachmentRepository,
   ) {}
 
-  @Transactional()
   async getTransactions(query: Record<string, any>) {
     const { limit, page, sortBy, ...filters } = query;
 
@@ -27,7 +25,6 @@ export class TransactionService {
     return await this.transactionRepository.findAll(filters, options);
   }
 
-  @Transactional()
   async createTransaction(dto: CreateTransactionDto, userId: string) {
     let userSetting = await this.settingRepository.findByUserId(userId);
 
@@ -72,7 +69,6 @@ export class TransactionService {
     };
   }
 
-  @Transactional()
   async getTransactionById(transactionId: string, userId: string) {
     const transaction =
       await this.transactionRepository.findByIdWithDetails(transactionId);
@@ -88,7 +84,6 @@ export class TransactionService {
     return transaction;
   }
 
-  @Transactional()
   async updateTransactionById(
     transactionId: string,
     dto: UpdateTransactionByIdDto,

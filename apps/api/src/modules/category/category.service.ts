@@ -6,7 +6,6 @@ import {
 import { Transactional } from "@nestjs-cls/transactional";
 
 import { CategoryRepository } from "@/modules/category/category.repository";
-import { GetCategoriesDto } from "@/modules/category/dtos/get-categories-dto";
 import { CreateCategoryDto } from "@/modules/category/dtos/create-category.dto";
 import { UpdateCategoryByIdDto } from "@/modules/category/dtos/update-category-by-id.dto";
 
@@ -14,7 +13,6 @@ import { UpdateCategoryByIdDto } from "@/modules/category/dtos/update-category-b
 export class CategoryService {
   constructor(private readonly categoryRepository: CategoryRepository) {}
 
-  @Transactional()
   async getCategories(query: Record<string, any>) {
     const filters = { userId: query.userId, type: query.type };
     const options = {
@@ -24,7 +22,6 @@ export class CategoryService {
     return await this.categoryRepository.findAll(filters, options);
   }
 
-  @Transactional()
   async createCategory(dto: CreateCategoryDto, userId: string) {
     return await this.categoryRepository.create({
       userId,
@@ -32,7 +29,6 @@ export class CategoryService {
     });
   }
 
-  @Transactional()
   async getCategoryById(categoryId: string, userId: string) {
     const category = await this.categoryRepository.findById(categoryId);
 
@@ -47,7 +43,6 @@ export class CategoryService {
     return category;
   }
 
-  @Transactional()
   async updateCategoryById(
     categoryId: string,
     dto: UpdateCategoryByIdDto,

@@ -1,16 +1,16 @@
 import { eq } from "drizzle-orm";
 import { Injectable } from "@nestjs/common";
-import { TransactionHost } from "@nestjs-cls/transactional";
 
+import { DB } from "@/modules/db/client";
 import { settingsTable } from "@/modules/db/schema";
-import { DbTransactionAdapter } from "@/modules/db/client";
+import { InjectDb } from "@/modules/db/db.provider";
 
 @Injectable()
 export class SettingRepository {
-  constructor(private readonly txHost: TransactionHost<DbTransactionAdapter>) {}
+  constructor(@InjectDb() private readonly db: DB) {}
 
   async create(payload: typeof settingsTable.$inferInsert) {
-    const [setting] = await this.txHost.tx
+    const [setting] = await this.db
       .insert(settingsTable)
       .values(payload)
       .returning();
@@ -18,7 +18,7 @@ export class SettingRepository {
   }
 
   async findById(id: string) {
-    const [setting] = await this.txHost.tx
+    const [setting] = await this.db
       .select()
       .from(settingsTable)
       .where(eq(settingsTable.id, id))
@@ -27,7 +27,7 @@ export class SettingRepository {
   }
 
   async findByUserId(userId: string) {
-    const [setting] = await this.txHost.tx
+    const [setting] = await this.db
       .select()
       .from(settingsTable)
       .where(eq(settingsTable.userId, userId))
@@ -39,7 +39,7 @@ export class SettingRepository {
     id: string,
     payload: Partial<typeof settingsTable.$inferInsert>,
   ) {
-    const [setting] = await this.txHost.tx
+    const [setting] = await this.db
       .update(settingsTable)
       .set({ ...payload })
       .where(eq(settingsTable.id, id))
