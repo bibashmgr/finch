@@ -74,6 +74,7 @@ export function TransactionList() {
               <div className="space-y-3">
                 <Skeleton className="w-full h-18" />
                 <Skeleton className="w-full h-18" />
+                <Skeleton className="w-full h-18" />
               </div>
             </div>
           );
