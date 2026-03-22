@@ -41,6 +41,7 @@ const transactionApi = apiSlice.injectEndpoints({
       invalidatesTags: [
         { type: "Transactions", id: "PARTIAL-LIST" },
         "DashboardSummary",
+        "Report",
       ],
     }),
 
@@ -65,6 +66,7 @@ const transactionApi = apiSlice.injectEndpoints({
         { type: "Transactions", id: response?.id },
         { type: "Transactions", id: "PARTIAL-LIST" },
         "DashboardSummary",
+        "Report",
       ],
     }),
   }),

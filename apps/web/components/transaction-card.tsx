@@ -26,9 +26,9 @@ export function TransactionCard({
         <div className="flex gap-3 items-center">
           <div
             style={{
-              backgroundColor: `${transaction.category.color}20`,
+              backgroundColor: `${transaction.category.color}30`,
             }}
-            className="size-10 border rounded-lg flex justify-center items-center bg-green-500/20"
+            className="size-10 border rounded-lg flex justify-center items-center"
           >
             <p className="text-base">{transaction.category.icon}</p>
           </div>
