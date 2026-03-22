@@ -36,7 +36,7 @@ export function RecentTransactionList() {
           </Link>
         </div>
         <div className="space-y-3">
-          {Array.from({ length: 2 }).map((_, index) => {
+          {Array.from({ length: 3 }).map((_, index) => {
             return <Skeleton key={index} className="w-full h-18" />;
           })}
         </div>

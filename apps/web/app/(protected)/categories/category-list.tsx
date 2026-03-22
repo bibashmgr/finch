@@ -84,7 +84,7 @@ export function CategoryList() {
                 <div
                   className="border rounded-lg size-10 flex justify-center items-center"
                   style={{
-                    backgroundColor: `${category.color}20`,
+                    backgroundColor: `${category.color}30`,
                   }}
                 >
                   {category.icon}
