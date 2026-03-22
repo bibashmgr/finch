@@ -34,12 +34,11 @@ export class TransactionService {
       });
     }
 
-    const { amount, issuedAt, attachments, ...otherDto } = dto;
+    const { issuedAt, attachments, ...otherDto } = dto;
 
     const transaction = await this.transactionRepository.create({
       userId,
       currency: userSetting.currency,
-      amount: amount.toString(),
       issuedAt: new Date(dto.issuedAt),
       ...otherDto,
     });
@@ -108,12 +107,11 @@ export class TransactionService {
       });
     }
 
-    const { amount, issuedAt, attachments, ...otherDto } = dto;
+    const { issuedAt, attachments, ...otherDto } = dto;
 
     return await this.transactionRepository.updateById(transactionId, {
       userId,
       currency: userSetting.currency,
-      amount: amount.toString(),
       issuedAt: new Date(dto.issuedAt),
       ...otherDto,
     });

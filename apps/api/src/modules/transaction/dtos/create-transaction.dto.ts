@@ -2,23 +2,21 @@ import {
   IsArray,
   IsDateString,
   IsEnum,
-  IsNotEmpty,
   IsNumber,
+  IsNumberString,
   IsOptional,
   IsString,
+  IsUUID,
 } from "class-validator";
-import { Transform } from "class-transformer";
 
 import { PaymentMethodEnum } from "../entities/payment-method.enum";
 
 export class CreateTransactionDto {
-  @IsString()
-  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
-  @IsNotEmpty()
+  @IsUUID()
   categoryId: string;
 
-  @IsNumber()
-  amount: number;
+  @IsNumberString()
+  amount: string;
 
   @IsString()
   notes: string;

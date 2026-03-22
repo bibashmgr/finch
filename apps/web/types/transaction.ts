@@ -5,7 +5,7 @@ export type Transaction = {
   userId: string;
   categoryId: string;
   currency: string;
-  amount: number;
+  amount: string;
   notes: string;
   paymentMethod: string;
   issuedAt: string;
@@ -37,7 +37,7 @@ export type TransactionWithDetails = Transaction & {
 
 export type TransactionCreateInput = {
   categoryId: string;
-  amount: number;
+  amount: string;
   notes: string;
   paymentMethod: string;
   attachments?: string[];

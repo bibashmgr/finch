@@ -73,7 +73,6 @@ export function TransactionCreateForm() {
       const { type, ...others } = values;
       await createTransaction({
         ...others,
-        amount: parseFloat(others.amount),
         issuedAt: others.issuedAt
           ? others.issuedAt.toISOString()
           : new Date().toISOString(),

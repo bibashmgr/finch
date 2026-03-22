@@ -3,7 +3,7 @@ import {
   IsDateString,
   IsEnum,
   IsNotEmpty,
-  IsNumber,
+  IsNumberString,
   IsOptional,
   IsString,
 } from "class-validator";
@@ -18,9 +18,9 @@ export class UpdateTransactionByIdDto {
   @IsOptional()
   categoryId?: string;
 
-  @IsNumber()
+  @IsNumberString()
   @IsOptional()
-  amount?: number;
+  amount?: string;
 
   @IsString()
   @IsOptional()

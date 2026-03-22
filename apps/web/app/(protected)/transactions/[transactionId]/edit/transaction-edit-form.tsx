@@ -92,7 +92,6 @@ export function TransactionEditForm() {
         id: params.transactionId,
         body: {
           ...others,
-          amount: parseFloat(others.amount),
           issuedAt: others.issuedAt
             ? others.issuedAt.toISOString()
             : new Date().toISOString(),

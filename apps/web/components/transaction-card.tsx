@@ -1,13 +1,13 @@
 import React from "react";
+import { format } from "date-fns";
 
-import { TransactionWithCategory } from "@/types/transaction";
-
-import { Card, CardContent } from "@repo/ui/components/card";
-import { useAppSelector } from "@/hooks/use-app-selector";
-import { getCurrencySymbol } from "@/utils/get-currency-symbol";
 import { cn } from "@repo/ui/lib/utils";
 import { CategoryTypeEnum } from "@/types/category";
-import { format } from "date-fns";
+import { useAppSelector } from "@/hooks/use-app-selector";
+import { TransactionWithCategory } from "@/types/transaction";
+import { getCurrencySymbol } from "@/utils/get-currency-symbol";
+
+import { Card, CardContent } from "@repo/ui/components/card";
 
 type TransactionCardProps = {
   transaction: TransactionWithCategory;
