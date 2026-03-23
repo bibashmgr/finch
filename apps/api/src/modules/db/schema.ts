@@ -11,6 +11,7 @@ import {
   bigint,
   boolean,
   numeric,
+  date,
 } from "drizzle-orm/pg-core";
 
 const usersTable = pgTable(
@@ -266,6 +267,37 @@ const transactionAttachmentsTable = pgTable(
   ],
 );
 
+const budgetsTable = pgTable(
+  "budgets",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+
+    userId: uuid("user_id")
+      .references(() => usersTable.id, { onDelete: "cascade" })
+      .notNull(),
+    categoryId: uuid("category_id")
+      .references(() => categoriesTable.id, { onDelete: "cascade" })
+      .notNull(),
+
+    amount: numeric("amount").notNull(),
+    month: date("month").notNull(),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    index("budgets_user_id_index").on(table.userId),
+    unique("budgets_user_category_month_unique").on(
+      table.userId,
+      table.categoryId,
+      table.month,
+    ),
+  ],
+);
+
 export {
   usersTable,
   accountProviderEnum,
@@ -283,4 +315,5 @@ export {
   paymentMethodEnum,
   transactionsTable,
   transactionAttachmentsTable,
+  budgetsTable,
 };

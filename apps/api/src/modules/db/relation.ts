@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 
 import {
+  budgetsTable,
   categoriesTable,
   transactionAttachmentsTable,
   transactionsTable,
@@ -19,6 +20,8 @@ const categoriesRelations = relations(categoriesTable, ({ one, many }) => ({
   }),
 
   transactions: many(transactionsTable),
+
+  budgets: many(budgetsTable),
 }));
 
 const transactionsRelations = relations(transactionsTable, ({ one, many }) => ({
@@ -45,9 +48,22 @@ const transactionAttachmentsRelations = relations(
   }),
 );
 
+const budgetsRelations = relations(budgetsTable, ({ one }) => ({
+  user: one(usersTable, {
+    fields: [budgetsTable.userId],
+    references: [usersTable.id],
+  }),
+
+  category: one(categoriesTable, {
+    fields: [budgetsTable.categoryId],
+    references: [categoriesTable.id],
+  }),
+}));
+
 export {
   usersRelations,
   categoriesRelations,
   transactionsRelations,
   transactionAttachmentsRelations,
+  budgetsRelations,
 };

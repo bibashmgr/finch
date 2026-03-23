@@ -15,6 +15,13 @@
       "when": 1773767467297,
       "tag": "0001_demonic_eternity",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1774179515182,
+      "tag": "0002_thick_red_ghost",
+      "breakpoints": true
     }
   ]
 }
