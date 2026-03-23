@@ -13,6 +13,7 @@ import {
   PopoverTrigger,
 } from "@repo/ui/components/popover";
 import { Button } from "@repo/ui/components/button";
+import { cn } from "@repo/ui/lib/utils";
 
 const months = [
   { long: "January", short: "Jan", index: 0 },
@@ -30,16 +31,26 @@ const months = [
 ] as const;
 
 type MonthPickerProps = {
-  value: Date;
-  onChange: (date: Date) => void;
+  value?: Date;
+  onChange?: (date: Date) => void;
+  placeholder?: string;
+  invalid?: boolean;
+  disabled?: boolean;
 };
 
 export function MonthPicker({
-  value = new Date(),
+  value,
   onChange,
+  placeholder = "Select a month",
+  invalid = false,
+  disabled = false,
 }: MonthPickerProps) {
-  const [year, setYear] = React.useState<number>(value.getFullYear());
-  const [month, setMonth] = React.useState<number>(value.getMonth());
+  const [year, setYear] = React.useState<number>(
+    value ? value.getFullYear() : new Date().getFullYear(),
+  );
+  const [month, setMonth] = React.useState<number>(
+    value ? value.getMonth() : new Date().getMonth(),
+  );
   const [open, setOpen] = React.useState<boolean>(false);
 
   const handleYearNavigation = React.useCallback(
@@ -73,8 +84,18 @@ export function MonthPicker({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="w-48 justify-between">
-          {months[value.getMonth()]?.short} {value.getFullYear()}
+        <Button
+          variant="outline"
+          className={cn(
+            "w-48 justify-between",
+            !value && "text-muted-foreground!",
+            invalid && "border-destructive! focus-visible:ring-destructive!",
+          )}
+          disabled={disabled}
+        >
+          {value
+            ? `${months[value.getMonth()]?.short} ${value.getFullYear()}`
+            : placeholder}
           <ChevronDownIcon />
         </Button>
       </PopoverTrigger>

@@ -13,10 +13,7 @@ export type Transaction = {
   updatedAt: string;
 };
 
-export type TransactionWithCategory = Omit<
-  TransactionWithAttachment,
-  "categoryId"
-> & {
+export type TransactionWithCategory = Omit<Transaction, "categoryId"> & {
   category: {
     id: string;
     type: CategoryTypeEnum;

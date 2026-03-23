@@ -151,15 +151,12 @@ export function TransactionListHeader() {
                   Oldest
                 </Button>
               </div>
+            </div>
 
-              <div className="space-y-2">
-                <p className="text-sm font-semibold">Date</p>
-                <div>
-                  <MonthPicker
-                    value={filters.date}
-                    onChange={handleChangeDate}
-                  />
-                </div>
+            <div className="space-y-2">
+              <p className="text-sm font-semibold">Date</p>
+              <div>
+                <MonthPicker value={filters.date} onChange={handleChangeDate} />
               </div>
             </div>
           </div>

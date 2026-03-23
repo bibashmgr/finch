@@ -25,6 +25,7 @@ export default function CategoryListPage() {
       }
     >
       <CategoryList />
+      <div className="py-11" />
     </StackLayout>
   );
 }
