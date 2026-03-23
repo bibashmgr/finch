@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { GalleryVerticalEnd } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -64,9 +64,13 @@ export function LoginForm({
               prefetch={false}
               className="flex flex-col items-center gap-2 font-medium"
             >
-              <div className="flex size-8 items-center justify-center rounded-md">
-                <GalleryVerticalEnd className="size-6" />
-              </div>
+              <Image
+                src="/images/logo.png"
+                alt="logo"
+                width={100}
+                height={100}
+                className="size-8"
+              />
               <span className="sr-only">Finch</span>
             </Link>
             <h1 className="text-xl font-bold">Welcome to Finch</h1>

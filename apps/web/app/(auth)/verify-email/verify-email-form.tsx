@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { GalleryVerticalEnd } from "lucide-react";
+import Image from "next/image";
 import { Controller, useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -81,9 +81,13 @@ export function VerifyEmailForm({
               prefetch={false}
               className="flex flex-col items-center gap-2 font-medium"
             >
-              <div className="flex size-8 items-center justify-center rounded-md">
-                <GalleryVerticalEnd className="size-6" />
-              </div>
+              <Image
+                src="/images/logo.png"
+                alt="logo"
+                width={100}
+                height={100}
+                className="size-8"
+              />
               <span className="sr-only">Finch</span>
             </Link>
             <h1 className="text-xl font-bold">Enter verification code</h1>

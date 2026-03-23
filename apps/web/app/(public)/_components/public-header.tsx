@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { LayoutGridIcon, LogOutIcon, SettingsIcon } from "lucide-react";
 
 import {
@@ -54,9 +55,16 @@ export function Header() {
   }
 
   return (
-    <header className="w-full h-16">
+    <header className="w-full h-16 sticky top-0 bg-background">
       <div className="w-full h-full flex items-center justify-between px-4 max-w-xl mx-auto">
-        <Link href="/" prefetch={false}>
+        <Link href="/" prefetch={false} className="flex gap-2 items-center">
+          <Image
+            src="/images/logo.png"
+            alt="logo"
+            width={100}
+            height={100}
+            className="size-7"
+          />
           <h2 className="font-bold text-xl">FINCH</h2>
         </Link>
 
