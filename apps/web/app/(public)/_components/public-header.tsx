@@ -55,7 +55,7 @@ export function Header() {
   }
 
   return (
-    <header className="w-full h-16 sticky top-0 bg-background">
+    <header className="w-full h-16 sticky top-0 bg-background z-10">
       <div className="w-full h-full flex items-center justify-between px-4 max-w-xl mx-auto">
         <Link href="/" prefetch={false} className="flex gap-2 items-center">
           <Image
