@@ -11,6 +11,7 @@ import { AuthModule } from "@/modules/auth/auth.module";
 import { AssetModule } from "@/modules/asset/asset.module";
 import { HealthModule } from "@/modules/health/health.module";
 import { ReportModule } from "@/modules/report/report.module";
+import { BudgetModule } from "@/modules/budget/budget.module";
 import { SettingModule } from "@/modules/setting/setting.module";
 import { CategoryModule } from "@/modules/category/category.module";
 import { DashboardModule } from "@/modules/dashboard/dashboard.module";
@@ -52,6 +53,7 @@ import { createThrollerConfig } from "@/config/throttler.config";
     TransactionModule,
     DashboardModule,
     ReportModule,
+    BudgetModule,
   ],
   controllers: [],
   providers: [
