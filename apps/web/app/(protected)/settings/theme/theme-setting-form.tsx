@@ -50,7 +50,7 @@ export function ThemeSettingForm() {
         mode: setting.theme,
       });
     }
-  }, [setting]);
+  }, [setting, form]);
 
   return (
     <form id="theme-setting-form" onSubmit={form.handleSubmit(handleFormSumit)}>

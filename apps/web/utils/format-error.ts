@@ -1,4 +1,4 @@
-import { ApiErrorResponse } from "@/schemas/response";
+import { ApiErrorResponse } from "@/types/response";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 export function formatError(

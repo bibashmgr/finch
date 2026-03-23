@@ -9,10 +9,7 @@ export const loginWithEmailFormSchema = z.object({
       error: "Please enter an email address",
     })
     .refine(
-      (value) =>
-        /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)+[a-z]{2,}$/i.test(
-          value,
-        ),
+      (value) => /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(value),
       {
         error: "Please enter a valid email address",
       },

@@ -70,11 +70,13 @@ export function TransactionCreateForm() {
 
   async function handleFormSubmit(values: TransactionCreateFormValues) {
     try {
-      const { type, ...others } = values;
       await createTransaction({
-        ...others,
-        issuedAt: others.issuedAt
-          ? others.issuedAt.toISOString()
+        amount: values.amount,
+        categoryId: values.categoryId,
+        notes: values.notes,
+        paymentMethod: values.paymentMethod,
+        issuedAt: values.issuedAt
+          ? values.issuedAt.toISOString()
           : new Date().toISOString(),
       }).unwrap();
       form.reset();

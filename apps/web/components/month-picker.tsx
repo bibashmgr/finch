@@ -78,7 +78,7 @@ export function MonthPicker({
       onChange?.(newDate);
       setOpen(false);
     },
-    [year],
+    [year, onChange],
   );
 
   return (

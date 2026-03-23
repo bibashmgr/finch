@@ -62,7 +62,7 @@ export function TransactionList() {
 
       return acc;
     }, {} as GroupedTransactions);
-  }, [data?.results]);
+  }, [data]);
 
   if (isLoading) {
     return (

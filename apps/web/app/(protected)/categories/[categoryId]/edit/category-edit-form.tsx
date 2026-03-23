@@ -76,11 +76,14 @@ export function CategoryEditForm() {
 
   async function handleFormSubmit(values: CategoryEditFormValues) {
     try {
-      const { type, ...others } = values;
-
       await updateCategory({
         id: params.categoryId,
-        body: others,
+        body: {
+          color: values.color,
+          description: values.description,
+          title: values.title,
+          icon: values.icon,
+        },
       }).unwrap();
       toast.success("Update category successfully");
       form.reset();
@@ -99,7 +102,7 @@ export function CategoryEditForm() {
         color: category.color,
       });
     }
-  }, [category]);
+  }, [category, form]);
 
   if (isLoading) {
     return (

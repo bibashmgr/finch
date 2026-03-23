@@ -43,8 +43,8 @@ export function LoginForm({
       toast.success("Verification code sent. Please check your email.");
       loginForm.reset();
       router.push(`/verify-email?email=${values.email}`);
-    } catch (error: unknown) {
-      let errorMessage =
+    } catch {
+      const errorMessage =
         "We couldn’t send the verification code. Please try again.";
       toast.error(errorMessage);
     }

@@ -87,13 +87,15 @@ export function TransactionEditForm() {
 
   async function handleFormSubmit(values: TransactionEditFormValues) {
     try {
-      const { type, ...others } = values;
       await updateTransaction({
         id: params.transactionId,
         body: {
-          ...others,
-          issuedAt: others.issuedAt
-            ? others.issuedAt.toISOString()
+          amount: values.amount,
+          categoryId: values.categoryId,
+          notes: values.notes,
+          paymentMethod: values.paymentMethod,
+          issuedAt: values.issuedAt
+            ? values.issuedAt.toISOString()
             : new Date().toISOString(),
         },
       }).unwrap();
@@ -116,7 +118,7 @@ export function TransactionEditForm() {
         attachments: transaction.attachments.map((a) => a.url),
       });
     }
-  }, [transaction]);
+  }, [transaction, form]);
 
   if (isLoading) {
     return (

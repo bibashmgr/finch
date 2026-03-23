@@ -1,8 +1,6 @@
 import React from "react";
-import { format } from "date-fns";
 
 import { cn } from "@repo/ui/lib/utils";
-import { CategoryTypeEnum } from "@/types/category";
 import { useAppSelector } from "@/hooks/use-app-selector";
 import { BudgetWithCategoryAndSpent } from "@/types/budget";
 import { getCurrencySymbol } from "@/utils/get-currency-symbol";

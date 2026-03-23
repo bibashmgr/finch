@@ -62,8 +62,8 @@ export function VerifyEmailForm({
       toast.success("Email verified successfully. Welcome back!");
       verifyEmailForm.reset();
       router.push("/dashboard");
-    } catch (error: unknown) {
-      let errorMessage = "We couldn’t verify your email. Please try again.";
+    } catch {
+      const errorMessage = "We couldn’t verify your email. Please try again.";
       toast.error(errorMessage);
     }
   }

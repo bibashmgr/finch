@@ -103,7 +103,7 @@ export function BudgetEditForm() {
         categoryId: budget.category.id,
       });
     }
-  }, [budget]);
+  }, [budget, form]);
 
   if (isLoading) {
     return (

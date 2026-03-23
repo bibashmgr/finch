@@ -11,10 +11,12 @@ import "@repo/ui/styles/globals.css";
 
 const fontSans = Open_Sans({
   variable: "--font-sans",
+  subsets: ["latin"],
 });
 const fontMono = Courier_Prime({
   variable: "--font-mono",
   weight: ["400", "700"],
+  subsets: ["latin"],
 });
 
 export default function GlobalErrorPage({

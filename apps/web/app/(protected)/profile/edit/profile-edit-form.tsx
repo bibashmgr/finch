@@ -32,8 +32,7 @@ export function ProfileEditForm() {
 
   const profile = useAppSelector((state) => state.profile.info);
 
-  const [uploadAsset, { isLoading: isAssetUploading }] =
-    useUploadAssetMutation();
+  const [uploadAsset] = useUploadAssetMutation();
   const [updateMyProfile] = useUpdateMyProfileMutation();
 
   const editProfileForm = useForm<ProfileUpdateFormValues>({
