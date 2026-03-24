@@ -1,10 +1,10 @@
 # Finch
 
-This is a community-maintained example. If you experience a problem, please submit a pull request with a fix. GitHub Issues will be closed.
+Track expenses, manage income, and plan budgets with Finch—a smart, easy-to-use web app for better personal finance management.
 
 ## What's inside?
 
-This Turborepo includes the following packages & apps:
+This repo is built using turborepo which includes the following packages & apps:
 
 ### Apps and Packages
 
@@ -18,8 +18,6 @@ This Turborepo includes the following packages & apps:
     ├── @repo/typescript-config   # `tsconfig.json`s used throughout the monorepo
     └── @repo/ui                  # Shareable stub React component library.
 ```
-
-Each package and application are mostly written in TypeScript.
 
 ### Commands
 
@@ -40,18 +38,6 @@ pnpm run build
 ```bash
 # Will run the development server for all the app & packages with the supported `dev` script.
 pnpm run dev
-```
-
-#### test
-
-```bash
-# Will launch a test suites for all the app & packages with the supported `test` script.
-pnpm run test
-
-# You can launch e2e testes with `test:e2e`
-pnpm run test:e2e
-
-# See `@repo/jest-config` to customize the behavior.
 ```
 
 #### Lint
