@@ -1,8 +1,13 @@
 "use client";
 
+import {
+  ArrowRightLeftIcon,
+  CalendarIcon,
+  TrendingDownIcon,
+  TrendingUpIcon,
+} from "lucide-react";
 import React from "react";
 import { format } from "date-fns";
-import { ArrowRightLeftIcon, CalendarIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -54,9 +59,8 @@ import {
   useUpdateTransactionMutation,
 } from "@/store/apis/transaction-api";
 import { cn } from "@repo/ui/lib/utils";
-import { Category } from "@/types/category";
+import { Category, CategoryTypeEnum } from "@/types/category";
 import { useGetCategoriesQuery } from "@/store/apis/category-api";
-import { categoryTypeOptions } from "@/constants/category-type-options";
 import { paymentMethodOptions } from "@/constants/payment-method-options";
 import { transactionEditFormSchema, TransactionEditFormValues } from "./schema";
 
@@ -75,7 +79,6 @@ export function TransactionEditForm() {
   const form = useForm<TransactionEditFormValues>({
     resolver: zodResolver(transactionEditFormSchema),
     defaultValues: {
-      type: "",
       categoryId: "",
       amount: "",
       notes: "",
@@ -113,7 +116,6 @@ export function TransactionEditForm() {
         notes: transaction.notes,
         issuedAt: new Date(transaction.issuedAt),
         categoryId: transaction.category.id,
-        type: transaction.category.type,
         paymentMethod: transaction.paymentMethod,
         attachments: transaction.attachments.map((a) => a.url),
       });
@@ -123,7 +125,7 @@ export function TransactionEditForm() {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 gap-4">
-        {Array.from({ length: 6 }).map((_, index) => {
+        {Array.from({ length: 5 }).map((_, index) => {
           return (
             <div key={index} className="space-y-2">
               <Skeleton className="w-20 h-6" />
@@ -161,41 +163,7 @@ export function TransactionEditForm() {
       className="py-4"
       onSubmit={form.handleSubmit(handleFormSubmit)}
     >
-      <FieldGroup>
-        <Controller
-          name="type"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="type">Type</FieldLabel>
-              <Select
-                key={field.value}
-                value={field.value}
-                onValueChange={(value) => {
-                  field.onChange(value);
-                  form.setValue("categoryId", "");
-                }}
-              >
-                <SelectTrigger aria-invalid={fieldState.invalid}>
-                  <SelectValue placeholder="Select an option" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {categoryTypeOptions.map((option) => {
-                      return (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-
+      <FieldGroup className="gap-4">
         <Controller
           name="categoryId"
           control={form.control}
@@ -203,9 +171,7 @@ export function TransactionEditForm() {
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="categoryId">Category</FieldLabel>
               <Combobox
-                items={categories?.results.filter(
-                  (i) => i.type === form.watch("type"),
-                )}
+                items={categories?.results}
                 itemToStringLabel={(item: Category) => item.title}
                 itemToStringValue={(item: Category) => item.id}
                 value={
@@ -216,14 +182,20 @@ export function TransactionEditForm() {
                 <ComboboxInput
                   placeholder="Select an option"
                   aria-invalid={fieldState.invalid}
-                  disabled={!form.watch("type")}
                 />
                 <ComboboxContent>
                   <ComboboxEmpty>No categories found.</ComboboxEmpty>
                   <ComboboxList>
                     {(item) => (
                       <ComboboxItem key={item.id} value={item}>
-                        {item.title}
+                        <div className="flex justify-between items-center gap-2 w-full">
+                          <p>{item.title}</p>
+                          {item.type === CategoryTypeEnum.INCOME ? (
+                            <TrendingUpIcon className="size-4 text-teal-500" />
+                          ) : (
+                            <TrendingDownIcon className="size-4 text-destructive" />
+                          )}
+                        </div>
                       </ComboboxItem>
                     )}
                   </ComboboxList>
