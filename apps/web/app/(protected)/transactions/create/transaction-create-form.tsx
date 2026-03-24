@@ -2,9 +2,9 @@
 
 import React from "react";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CalendarIcon, TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 
 import {
   Field,
@@ -45,9 +45,8 @@ import {
   TransactionCreateFormValues,
 } from "./schema";
 import { cn } from "@repo/ui/lib/utils";
-import { Category } from "@/types/category";
+import { Category, CategoryTypeEnum } from "@/types/category";
 import { useGetCategoriesQuery } from "@/store/apis/category-api";
-import { categoryTypeOptions } from "@/constants/category-type-options";
 import { paymentMethodOptions } from "@/constants/payment-method-options";
 import { useCreateTransactionMutation } from "@/store/apis/transaction-api";
 
@@ -58,7 +57,6 @@ export function TransactionCreateForm() {
   const form = useForm<TransactionCreateFormValues>({
     resolver: zodResolver(transactionCreateFormSchema),
     defaultValues: {
-      type: "",
       categoryId: "",
       amount: "",
       notes: "",
@@ -92,41 +90,7 @@ export function TransactionCreateForm() {
       className="py-4"
       onSubmit={form.handleSubmit(handleFormSubmit)}
     >
-      <FieldGroup>
-        <Controller
-          name="type"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="type">Type</FieldLabel>
-              <Select
-                key={field.value}
-                value={field.value}
-                onValueChange={(value) => {
-                  field.onChange(value);
-                  form.setValue("categoryId", "");
-                }}
-              >
-                <SelectTrigger aria-invalid={fieldState.invalid}>
-                  <SelectValue placeholder="Select an option" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {categoryTypeOptions.map((option) => {
-                      return (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-
+      <FieldGroup className="gap-4">
         <Controller
           name="categoryId"
           control={form.control}
@@ -134,9 +98,7 @@ export function TransactionCreateForm() {
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="categoryId">Category</FieldLabel>
               <Combobox
-                items={categories?.results.filter(
-                  (i) => i.type === form.watch("type"),
-                )}
+                items={categories?.results}
                 itemToStringLabel={(item: Category) => item.title}
                 itemToStringValue={(item: Category) => item.id}
                 value={
@@ -147,14 +109,20 @@ export function TransactionCreateForm() {
                 <ComboboxInput
                   placeholder="Select an option"
                   aria-invalid={fieldState.invalid}
-                  disabled={!form.watch("type")}
                 />
                 <ComboboxContent>
                   <ComboboxEmpty>No categories found.</ComboboxEmpty>
                   <ComboboxList>
                     {(item) => (
                       <ComboboxItem key={item.id} value={item}>
-                        {item.title}
+                        <div className="flex justify-between items-center gap-2 w-full">
+                          <p>{item.title}</p>
+                          {item.type === CategoryTypeEnum.INCOME ? (
+                            <TrendingUpIcon className="size-4 text-teal-500" />
+                          ) : (
+                            <TrendingDownIcon className="size-4 text-destructive" />
+                          )}
+                        </div>
                       </ComboboxItem>
                     )}
                   </ComboboxList>

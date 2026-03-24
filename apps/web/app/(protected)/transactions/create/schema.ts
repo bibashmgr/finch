@@ -2,9 +2,6 @@ import { z } from "zod";
 
 export const transactionCreateFormSchema = z
   .object({
-    type: z.string().nonempty({
-      error: "Please select an option",
-    }),
     categoryId: z.string().nonempty({
       error: "Please select an option.",
     }),

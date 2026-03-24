@@ -29,7 +29,7 @@ export function DashboardHeader() {
 
         <div className="space-y-0.5">
           <p className="text-xs text-muted-foreground">Good morning</p>
-          <p className="text-base font-semibold">Bibash Magar</p>
+          <p className="text-base font-semibold">{profile?.name}</p>
         </div>
       </div>
 
