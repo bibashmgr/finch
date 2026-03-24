@@ -127,8 +127,8 @@ export function ReportDetailList({ period }: ReportDetailListProps) {
             </EmptyMedia>
             <EmptyTitle>No transactions found</EmptyTitle>
             <EmptyDescription>
-              Looks like there aren&apos;t any transactions for curreny month to
-              show right now. Try adding one or change filters.
+              Looks like there aren&apos;t any transactions to show right now.
+              Try adding one or change filters.
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
