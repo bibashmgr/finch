@@ -285,6 +285,7 @@ export function TransactionEditForm() {
                     mode="single"
                     selected={field.value ?? undefined}
                     onSelect={field.onChange}
+                    disabled={{ after: new Date() }}
                   />
                 </PopoverContent>
               </Popover>

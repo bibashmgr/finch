@@ -7,24 +7,30 @@ import { TransactionRepository } from "@/modules/transaction/transaction.reposit
 export class DashboardService {
   constructor(private readonly transactionRepository: TransactionRepository) {}
 
-  async getDashboardSummary(query: Record<string, any>) {
-    const startDate = query.startDate
-      ? new Date(query.startDate)
+  async getSummary(filters: {
+    userId: string;
+    startDate?: string;
+    endDate?: string;
+  }) {
+    const startDate = filters.startDate
+      ? new Date(filters.startDate)
       : startOfMonth(new Date());
-    const endDate = query.endDate
-      ? new Date(query.endDate)
+    const endDate = filters.endDate
+      ? new Date(filters.endDate)
       : endOfMonth(new Date());
 
-    const totalIncomeResult = await this.transactionRepository.getTotalIncome(
-      query.userId,
+    // TODO: use promise.all
+    const [totalIncomeResult] = await this.transactionRepository.getTotalIncome(
+      filters.userId,
       startDate,
       endDate,
     );
-    const totalExpenseResult = await this.transactionRepository.getTotalExpense(
-      query.userId,
-      startDate,
-      endDate,
-    );
+    const [totalExpenseResult] =
+      await this.transactionRepository.getTotalExpense(
+        filters.userId,
+        startDate,
+        endDate,
+      );
 
     const totalIncome = parseFloat(totalIncomeResult.total ?? "0");
     const totalExpense = parseFloat(totalExpenseResult.total ?? "0");

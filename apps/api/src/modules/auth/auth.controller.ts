@@ -55,11 +55,13 @@ export class AuthController {
 
   @Public()
   @Get("google")
+  @HttpCode(HttpStatus.OK)
   @UseGuards(GoogleAuthGuard)
   async loginWithGoogle() {}
 
   @Public()
   @Get("google/callback")
+  @HttpCode(HttpStatus.OK)
   @UseGuards(GoogleAuthGuard)
   async handleGoogleCallback(@Req() req: Request, @Res() res: Response) {
     const tokens = await this.authService.handleGoogleCallback(

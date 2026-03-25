@@ -9,44 +9,27 @@ import { InjectDb } from "@/modules/db/db.provider";
 export class UsersRepository {
   constructor(@InjectDb() private readonly db: DB) {}
 
-  async create(
-    data: typeof usersTable.$inferInsert,
-  ): Promise<typeof usersTable.$inferSelect> {
-    const [user] = await this.db.insert(usersTable).values(data).returning();
-    return user;
+  create(payload: typeof usersTable.$inferInsert) {
+    return this.db.insert(usersTable).values(payload).returning();
   }
 
-  async findByEmail(
-    email: string,
-  ): Promise<typeof usersTable.$inferSelect | undefined> {
-    const [user] = await this.db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.email, email))
-      .limit(1);
-    return user;
+  findOneByEmail(email: string) {
+    return this.db.query.usersTable.findFirst({
+      where: eq(usersTable.email, email),
+    });
   }
 
-  async findById(
-    id: string,
-  ): Promise<typeof usersTable.$inferSelect | undefined> {
-    const [user] = await this.db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.id, id))
-      .limit(1);
-    return user;
+  findOneById(id: string) {
+    return this.db.query.usersTable.findFirst({
+      where: eq(usersTable.id, id),
+    });
   }
 
-  async update(
-    id: string,
-    payload: Partial<typeof usersTable.$inferInsert>,
-  ): Promise<typeof usersTable.$inferSelect | undefined> {
-    const [user] = await this.db
+  update(id: string, payload: Partial<typeof usersTable.$inferInsert>) {
+    return this.db
       .update(usersTable)
       .set({ ...payload })
       .where(eq(usersTable.id, id))
       .returning();
-    return user;
   }
 }

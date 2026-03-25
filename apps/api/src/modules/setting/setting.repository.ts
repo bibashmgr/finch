@@ -9,41 +9,27 @@ import { InjectDb } from "@/modules/db/db.provider";
 export class SettingRepository {
   constructor(@InjectDb() private readonly db: DB) {}
 
-  async create(payload: typeof settingsTable.$inferInsert) {
-    const [setting] = await this.db
-      .insert(settingsTable)
-      .values(payload)
-      .returning();
-    return setting;
+  create(payload: typeof settingsTable.$inferInsert) {
+    return this.db.insert(settingsTable).values(payload).returning();
   }
 
-  async findById(id: string) {
-    const [setting] = await this.db
-      .select()
-      .from(settingsTable)
-      .where(eq(settingsTable.id, id))
-      .limit(1);
-    return setting;
+  findOneById(id: string) {
+    return this.db.query.settingsTable.findFirst({
+      where: eq(settingsTable.id, id),
+    });
   }
 
-  async findByUserId(userId: string) {
-    const [setting] = await this.db
-      .select()
-      .from(settingsTable)
-      .where(eq(settingsTable.userId, userId))
-      .limit(1);
-    return setting;
+  findOneByUserId(userId: string) {
+    return this.db.query.settingsTable.findFirst({
+      where: eq(settingsTable.userId, userId),
+    });
   }
 
-  async update(
-    id: string,
-    payload: Partial<typeof settingsTable.$inferInsert>,
-  ) {
-    const [setting] = await this.db
+  update(id: string, payload: Partial<typeof settingsTable.$inferInsert>) {
+    return this.db
       .update(settingsTable)
       .set({ ...payload })
       .where(eq(settingsTable.id, id))
       .returning();
-    return setting;
   }
 }

@@ -9,20 +9,14 @@ import { verificationCodesTable } from "@/modules/db/schema";
 export class OtpRepository {
   constructor(@InjectDb() private readonly db: DB) {}
 
-  async saveVerificationCode(
-    payload: typeof verificationCodesTable.$inferInsert,
-  ) {
-    const [verificationCode] = await this.db
-      .insert(verificationCodesTable)
-      .values(payload)
-      .returning();
-    return verificationCode;
+  create(payload: typeof verificationCodesTable.$inferInsert) {
+    return this.db.insert(verificationCodesTable).values(payload).returning();
   }
 
-  async findValidVerificationCodes(email: string) {
+  async findAllByEmail(email: string) {
     const now = new Date();
 
-    const verificationCodes = await this.db
+    return this.db
       .select()
       .from(verificationCodesTable)
       .where(
@@ -32,18 +26,28 @@ export class OtpRepository {
           gt(verificationCodesTable.expiresAt, now),
         ),
       );
-    return verificationCodes;
   }
 
-  async updateVerificationCode(
+  findOneByEmail(email: string) {
+    const now = new Date();
+
+    return this.db.query.verificationCodesTable.findFirst({
+      where: and(
+        eq(verificationCodesTable.email, email),
+        isNull(verificationCodesTable.consumedAt),
+        gt(verificationCodesTable.expiresAt, now),
+      ),
+    });
+  }
+
+  update(
     id: string,
     payload: Partial<typeof verificationCodesTable.$inferInsert>,
   ) {
-    const [verificationCode] = await this.db
+    return this.db
       .update(verificationCodesTable)
       .set({ ...payload })
       .where(eq(verificationCodesTable.id, id))
       .returning();
-    return verificationCode;
   }
 }

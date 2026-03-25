@@ -2,7 +2,10 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -10,56 +13,52 @@ import {
 
 import { usersTable } from "@/modules/db/schema";
 import { CategoryService } from "@/modules/category/category.service";
-import { GetCategoriesDto } from "@/modules/category/dtos/get-categories-dto";
-import { CreateCategoryDto } from "@/modules/category/dtos/create-category.dto";
-import { UpdateCategoryByIdDto } from "@/modules/category/dtos/update-category-by-id.dto";
+import { GetCategoriesDto } from "@/modules/category/dtos/get-categories.dto";
 import { CurrentUser } from "@/modules/auth/decorators/current-user.decorator";
-import { GetCategoryByIdDto } from "@/modules/category/dtos/get-category-by-id.dto";
+import { CreateCategoryDto } from "@/modules/category/dtos/create-category.dto";
+import { UpdateCategoryDto } from "@/modules/category/dtos/update-category.dto";
 
 @Controller("categories")
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
-  getCategories(
+  @HttpCode(HttpStatus.OK)
+  findAll(
+    @Query() { type, limit, page }: GetCategoriesDto,
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
-    @Query() query: GetCategoriesDto,
   ) {
-    return this.categoryService.getCategories({
-      ...query,
-      userId: currentUser.id,
-    });
+    return this.categoryService.findAll(
+      { userId: currentUser.id, type },
+      { limit, page },
+    );
   }
 
   @Post()
-  createCategory(
+  @HttpCode(HttpStatus.CREATED)
+  create(
     @Body() dto: CreateCategoryDto,
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
-    return this.categoryService.createCategory(dto, currentUser.id);
+    return this.categoryService.create(currentUser.id, dto);
   }
 
   @Get(":categoryId")
-  getCategoryById(
-    @Param() param: GetCategoryByIdDto,
+  @HttpCode(HttpStatus.OK)
+  findOne(
+    @Param("categoryId", ParseUUIDPipe) categoryId: string,
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
-    return this.categoryService.getCategoryById(
-      param.categoryId,
-      currentUser.id,
-    );
+    return this.categoryService.findOne(categoryId, currentUser.id);
   }
 
   @Patch(":categoryId")
-  updateCategoryById(
-    @Param() param: GetCategoryByIdDto,
-    @Body() dto: UpdateCategoryByIdDto,
+  @HttpCode(HttpStatus.OK)
+  update(
+    @Param("categoryId", ParseUUIDPipe) categoryId: string,
+    @Body() dto: UpdateCategoryDto,
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
-    return this.categoryService.updateCategoryById(
-      param.categoryId,
-      dto,
-      currentUser.id,
-    );
+    return this.categoryService.update(categoryId, dto, currentUser.id);
   }
 }

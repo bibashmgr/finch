@@ -36,7 +36,7 @@ export function RecentTransactionList() {
           </Link>
         </div>
         <div className="space-y-3">
-          {Array.from({ length: 3 }).map((_, index) => {
+          {Array.from({ length: 5 }).map((_, index) => {
             return <Skeleton key={index} className="w-full h-18" />;
           })}
         </div>
@@ -91,7 +91,7 @@ export function RecentTransactionList() {
             </EmptyMedia>
             <EmptyTitle>No transactions found</EmptyTitle>
             <EmptyDescription>
-              Looks like there aren&apos;t any transactions for curreny month to
+              Looks like there aren&apos;t any transactions for current month to
               show right now. Try adding one or change filters.
             </EmptyDescription>
           </EmptyHeader>

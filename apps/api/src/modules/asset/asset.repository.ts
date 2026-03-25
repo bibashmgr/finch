@@ -9,47 +9,33 @@ import { InjectDb } from "@/modules/db/db.provider";
 export class AssetRepository {
   constructor(@InjectDb() private readonly db: DB) {}
 
-  async create(payload: typeof assetsTable.$inferInsert) {
-    const [asset] = await this.db
-      .insert(assetsTable)
-      .values(payload)
-      .returning();
-    return asset;
+  create(payload: typeof assetsTable.$inferInsert) {
+    return this.db.insert(assetsTable).values(payload).returning();
   }
 
-  async findById(id: string) {
-    const [asset] = await this.db
-      .select()
-      .from(assetsTable)
-      .where(eq(assetsTable.id, id))
-      .limit(1);
-    return asset;
+  findOneById(id: string) {
+    return this.db.query.assetsTable.findFirst({
+      where: eq(assetsTable.id, id),
+    });
   }
 
-  async findByUrl(url: string) {
-    const [asset] = await this.db
-      .select()
-      .from(assetsTable)
-      .where(eq(assetsTable.url, url))
-      .limit(1);
-    return asset;
+  findOneByUrl(url: string) {
+    return this.db.query.assetsTable.findFirst({
+      where: eq(assetsTable.url, url),
+    });
   }
 
-  async findByPublicId(publicId: string) {
-    const [asset] = await this.db
-      .select()
-      .from(assetsTable)
-      .where(eq(assetsTable.publicId, publicId))
-      .limit(1);
-    return asset;
+  findOneByPublicId(publicId: string) {
+    return this.db.query.assetsTable.findFirst({
+      where: eq(assetsTable.publicId, publicId),
+    });
   }
 
-  async update(id: string, payload: Partial<typeof assetsTable.$inferInsert>) {
-    const [asset] = await this.db
+  update(id: string, payload: Partial<typeof assetsTable.$inferInsert>) {
+    return this.db
       .update(assetsTable)
       .set({ ...payload })
       .where(eq(assetsTable.id, id))
       .returning();
-    return asset;
   }
 }

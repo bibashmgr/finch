@@ -22,7 +22,7 @@ export function NotificationList() {
           </EmptyMedia>
           <EmptyTitle>No notifications found</EmptyTitle>
           <EmptyDescription>
-            Looks like there aren&apos;t any transactions to show right now.
+            Looks like there aren&apos;t any notifications to show right now.
             Check back later.
           </EmptyDescription>
         </EmptyHeader>

@@ -17,11 +17,7 @@ export interface ReportRow {
 export class ReportRepository {
   constructor(@InjectDb() private readonly db: DB) {}
 
-  async getGroupedTotals(
-    userId: string,
-    since: Date,
-    truncation: Truncation,
-  ): Promise<ReportRow[]> {
+  getGroupedTotals(userId: string, since: Date, truncation: Truncation) {
     const labelFormat =
       truncation === "day" ? "Day" : truncation === "month" ? "Month" : "YYYY";
 

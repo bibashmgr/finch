@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Patch } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Patch,
+} from "@nestjs/common";
 
 import { usersTable } from "@/modules/db/schema";
 import { UserService } from "@/modules/user/user.service";
@@ -10,15 +17,17 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get("me")
+  @HttpCode(HttpStatus.OK)
   getProfile(@CurrentUser() user: typeof usersTable.$inferSelect) {
     return user;
   }
 
   @Patch("me")
+  @HttpCode(HttpStatus.OK)
   updateProfile(
-    @CurrentUser() user: typeof usersTable.$inferSelect,
+    @CurrentUser() currentUser: typeof usersTable.$inferSelect,
     @Body() dto: UpdateProfileDto,
   ) {
-    return this.userService.updateProfile(user, dto);
+    return this.userService.updateProfile(currentUser.id, dto);
   }
 }

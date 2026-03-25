@@ -11,7 +11,7 @@ export class SettingService {
   constructor(private readonly settingRepository: SettingRepository) {}
 
   async getMySettings(userId: string) {
-    const userSetting = await this.settingRepository.findByUserId(userId);
+    const userSetting = await this.settingRepository.findOneByUserId(userId);
 
     if (!userSetting) {
       return this.settingRepository.create({
@@ -26,7 +26,7 @@ export class SettingService {
     userId: string,
     payload: UpdateCurrencySettingDto,
   ) {
-    const userSetting = await this.settingRepository.findByUserId(userId);
+    const userSetting = await this.settingRepository.findOneByUserId(userId);
 
     if (!userSetting) {
       return this.settingRepository.create({
@@ -44,7 +44,7 @@ export class SettingService {
     userId: string,
     payload: UpdateLanguageSettingDto,
   ) {
-    const userSetting = await this.settingRepository.findByUserId(userId);
+    const userSetting = await this.settingRepository.findOneByUserId(userId);
 
     if (!userSetting) {
       return this.settingRepository.create({
@@ -59,7 +59,7 @@ export class SettingService {
   }
 
   async updateThemeSetting(userId: string, payload: UpdateThemeSettingDto) {
-    const userSetting = await this.settingRepository.findByUserId(userId);
+    const userSetting = await this.settingRepository.findOneByUserId(userId);
 
     if (!userSetting) {
       return this.settingRepository.create({
@@ -77,7 +77,7 @@ export class SettingService {
     userId: string,
     payload: UpdateNotificationSettingDto,
   ) {
-    const userSetting = await this.settingRepository.findByUserId(userId);
+    const userSetting = await this.settingRepository.findOneByUserId(userId);
 
     if (!userSetting) {
       return this.settingRepository.create({

@@ -9,27 +9,16 @@ import { InjectDb } from "@/modules/db/db.provider";
 export class AccountRepository {
   constructor(@InjectDb() private readonly db: DB) {}
 
-  async create(payload: typeof accountsTable.$inferInsert) {
-    const [account] = await this.db
-      .insert(accountsTable)
-      .values(payload)
-      .returning();
-    return account;
+  create(payload: typeof accountsTable.$inferInsert) {
+    return this.db.insert(accountsTable).values(payload).returning();
   }
 
-  async findByProvider(
-    provider: "google" | "email",
-    providerAccountId: string,
-  ) {
-    const [account] = await this.db
-      .select()
-      .from(accountsTable)
-      .where(
-        and(
-          eq(accountsTable.provider, provider),
-          eq(accountsTable.providerAccountId, providerAccountId),
-        ),
-      );
-    return account;
+  findOneByProvider(provider: "google" | "email", providerAccountId: string) {
+    return this.db.query.accountsTable.findFirst({
+      where: and(
+        eq(accountsTable.provider, provider),
+        eq(accountsTable.providerAccountId, providerAccountId),
+      ),
+    });
   }
 }
