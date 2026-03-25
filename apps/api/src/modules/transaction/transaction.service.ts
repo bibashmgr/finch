@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 
 import { SettingRepository } from "@/modules/setting/setting.repository";
+import { CategoryTypeEnum } from "@/modules/category/entities/category-type.enum";
 import { TransactionRepository } from "@/modules/transaction/transaction.repository";
 import { CreateTransactionDto } from "@/modules/transaction/dtos/create-transaction.dto";
 import { UpdateTransactionByIdDto } from "@/modules/transaction/dtos/update-transaction-by-id.dto";
@@ -18,25 +19,31 @@ export class TransactionService {
     private readonly transactionAttachmentRepository: TransactionAttachmentRepository,
   ) {}
 
-  async getTransactions(query: Record<string, any>) {
-    const { limit, page, sortBy, ...filters } = query;
-
-    const options = { limit, page, sortBy };
+  async findAll(
+    filters: {
+      userId: string;
+      startDate?: string;
+      endDate?: string;
+      type?: CategoryTypeEnum;
+    },
+    options: { limit?: number; page?: number; sortBy?: string },
+  ) {
     return await this.transactionRepository.findAll(filters, options);
   }
 
-  async createTransaction(dto: CreateTransactionDto, userId: string) {
-    let userSetting = await this.settingRepository.findByUserId(userId);
+  async create(dto: CreateTransactionDto, userId: string) {
+    let userSetting = await this.settingRepository.findOneByUserId(userId);
 
     if (!userSetting) {
-      userSetting = await this.settingRepository.create({
+      const [newUserSetting] = await this.settingRepository.create({
         userId,
       });
+      userSetting = newUserSetting;
     }
 
     const { issuedAt, attachments, ...otherDto } = dto;
 
-    const transaction = await this.transactionRepository.create({
+    const [transaction] = await this.transactionRepository.create({
       userId,
       currency: userSetting.currency,
       issuedAt: new Date(dto.issuedAt),
@@ -52,7 +59,7 @@ export class TransactionService {
       );
 
       const attachedTransaction =
-        await this.transactionRepository.findByIdWithAttachments(
+        await this.transactionRepository.findOneByIdWithAttachments(
           transaction.id,
         );
 
@@ -68,9 +75,11 @@ export class TransactionService {
     };
   }
 
-  async getTransactionById(transactionId: string, userId: string) {
+  async findOne(transactionId: string, userId: string) {
     const transaction =
-      await this.transactionRepository.findByIdWithDetails(transactionId);
+      await this.transactionRepository.findOneByIdWithCategoryAndAttachments(
+        transactionId,
+      );
 
     if (!transaction) {
       throw new NotFoundException("Transaction not found");
@@ -83,37 +92,22 @@ export class TransactionService {
     return transaction;
   }
 
-  async updateTransactionById(
+  async update(
     transactionId: string,
     dto: UpdateTransactionByIdDto,
     userId: string,
   ) {
-    const transaction =
-      await this.transactionRepository.findByIdWithAttachments(transactionId);
-
-    if (!transaction) {
-      throw new NotFoundException("Transaction not found");
-    }
-
-    if (transaction.userId !== userId) {
-      throw new ForbiddenException("Access denied");
-    }
-
-    let userSetting = await this.settingRepository.findByUserId(userId);
-
-    if (!userSetting) {
-      userSetting = await this.settingRepository.create({
-        userId,
-      });
-    }
+    await this.findOne(transactionId, userId);
 
     const { issuedAt, attachments, ...otherDto } = dto;
 
-    return await this.transactionRepository.updateById(transactionId, {
-      userId,
-      currency: userSetting.currency,
-      issuedAt: new Date(dto.issuedAt),
-      ...otherDto,
-    });
+    const [updatedTransaction] = await this.transactionRepository.update(
+      transactionId,
+      {
+        issuedAt: new Date(dto.issuedAt),
+        ...otherDto,
+      },
+    );
+    return updatedTransaction;
   }
 }

@@ -13,19 +13,6 @@ export interface ReportItem {
 export class ReportService {
   constructor(private readonly reportRepository: ReportRepository) {}
 
-  async getReports(
-    userId: string,
-    period: ReportPeriodEnum,
-  ): Promise<ReportItem[]> {
-    const { since, truncation, labels } = this.buildPeriodConfig(period);
-    const rows = await this.reportRepository.getGroupedTotals(
-      userId,
-      since,
-      truncation,
-    );
-    return this.mergeWithLabels(labels, rows);
-  }
-
   private buildPeriodConfig(period: ReportPeriodEnum) {
     const now = new Date();
 
@@ -95,5 +82,18 @@ export class ReportService {
         expense: Number(row?.expense ?? 0),
       };
     });
+  }
+
+  async getReports(
+    userId: string,
+    period: ReportPeriodEnum,
+  ): Promise<ReportItem[]> {
+    const { since, truncation, labels } = this.buildPeriodConfig(period);
+    const rows = await this.reportRepository.getGroupedTotals(
+      userId,
+      since,
+      truncation,
+    );
+    return this.mergeWithLabels(labels, rows);
   }
 }

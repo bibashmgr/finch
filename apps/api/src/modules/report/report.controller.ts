@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, HttpCode, HttpStatus, Query } from "@nestjs/common";
 
 import { usersTable } from "@/modules/db/schema";
 import { ReportService } from "@/modules/report/report.service";
@@ -10,10 +10,11 @@ export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   getReports(
-    @Query() query: GetReportsDto,
+    @Query() { period }: GetReportsDto,
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
-    return this.reportService.getReports(currentUser.id, query.period);
+    return this.reportService.getReports(currentUser.id, period);
   }
 }

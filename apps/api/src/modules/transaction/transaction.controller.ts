@@ -2,7 +2,10 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -13,7 +16,6 @@ import { TransactionService } from "@/modules/transaction/transaction.service";
 import { CurrentUser } from "@/modules/auth/decorators/current-user.decorator";
 import { GetTransactionsDto } from "@/modules/transaction/dtos/get-transactions-dto";
 import { CreateTransactionDto } from "@/modules/transaction/dtos/create-transaction.dto";
-import { GetTransactionByIdDto } from "@/modules/transaction/dtos/get-transaction-by-id.dto";
 import { UpdateTransactionByIdDto } from "@/modules/transaction/dtos/update-transaction-by-id.dto";
 
 @Controller("transactions")
@@ -21,45 +23,46 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Get()
-  getTransactions(
+  @HttpCode(HttpStatus.OK)
+  findAll(
+    @Query() { limit, page, sortBy, endDate, startDate }: GetTransactionsDto,
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
-    @Query() query: GetTransactionsDto,
   ) {
-    return this.transactionService.getTransactions({
-      ...query,
-      userId: currentUser.id,
-    });
+    return this.transactionService.findAll(
+      {
+        userId: currentUser.id,
+        startDate,
+        endDate,
+      },
+      { limit, page, sortBy },
+    );
   }
 
   @Post()
-  createTransaction(
+  @HttpCode(HttpStatus.CREATED)
+  create(
     @Body() dto: CreateTransactionDto,
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
-    return this.transactionService.createTransaction(dto, currentUser.id);
+    return this.transactionService.create(dto, currentUser.id);
   }
 
   @Get(":transactionId")
-  getTransactionById(
-    @Param() param: GetTransactionByIdDto,
+  @HttpCode(HttpStatus.OK)
+  findOne(
+    @Param("transactionId", ParseUUIDPipe) transactionId: string,
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
-    return this.transactionService.getTransactionById(
-      param.transactionId,
-      currentUser.id,
-    );
+    return this.transactionService.findOne(transactionId, currentUser.id);
   }
 
   @Patch(":transactionId")
-  updateTransactionById(
-    @Param() param: GetTransactionByIdDto,
+  @HttpCode(HttpStatus.OK)
+  update(
+    @Param("transactionId", ParseUUIDPipe) transactionId: string,
     @Body() dto: UpdateTransactionByIdDto,
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
-    return this.transactionService.updateTransactionById(
-      param.transactionId,
-      dto,
-      currentUser.id,
-    );
+    return this.transactionService.update(transactionId, dto, currentUser.id);
   }
 }

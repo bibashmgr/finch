@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Patch } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Patch,
+} from "@nestjs/common";
 
 import { usersTable } from "@/modules/db/schema";
 import { SettingService } from "@/modules/setting/setting.service";
@@ -13,38 +20,43 @@ export class SettingController {
   constructor(private readonly settingService: SettingService) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   getMySettings(@CurrentUser() currentUser: typeof usersTable.$inferSelect) {
     return this.settingService.getMySettings(currentUser.id);
   }
 
   @Patch("currency")
+  @HttpCode(HttpStatus.OK)
   updateCurrencySetting(
-    @CurrentUser() currentUser: typeof usersTable.$inferSelect,
     @Body() dto: UpdateCurrencySettingDto,
+    @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
     return this.settingService.updateCurrencySetting(currentUser.id, dto);
   }
 
   @Patch("language")
+  @HttpCode(HttpStatus.OK)
   updateLanguageSetting(
-    @CurrentUser() currentUser: typeof usersTable.$inferSelect,
     @Body() dto: UpdateLanguageSettingDto,
+    @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
     return this.settingService.updateLanguageSetting(currentUser.id, dto);
   }
 
   @Patch("theme")
+  @HttpCode(HttpStatus.OK)
   updateThemeSetting(
-    @CurrentUser() currentUser: typeof usersTable.$inferSelect,
     @Body() dto: UpdateThemeSettingDto,
+    @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
     return this.settingService.updateThemeSetting(currentUser.id, dto);
   }
 
   @Patch("notification")
+  @HttpCode(HttpStatus.OK)
   updateNotificationSetting(
-    @CurrentUser() currentUser: typeof usersTable.$inferSelect,
     @Body() dto: UpdateNotificationSettingDto,
+    @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
     return this.settingService.updateNotificationSetting(currentUser.id, dto);
   }

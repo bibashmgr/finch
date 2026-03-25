@@ -35,20 +35,21 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     const avatarUrl = profile.photos[0].value;
 
     let user: typeof usersTable.$inferSelect;
-    let account = await this.accountRepository.findByProvider(
+    let account = await this.accountRepository.findOneByProvider(
       "google",
       googleId,
     );
 
     if (!account) {
-      user = await this.userRepository.findByEmail(email);
+      user = await this.userRepository.findOneByEmail(email);
 
       if (!user) {
-        user = await this.userRepository.create({
+        const [newUser] = await this.userRepository.create({
           email,
           name,
           avatarUrl,
         });
+        user = newUser;
       }
 
       await this.accountRepository.create({
@@ -57,7 +58,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
         providerAccountId: googleId,
       });
     } else {
-      user = await this.userRepository.findById(account.userId);
+      user = await this.userRepository.findOneById(account.userId);
     }
 
     done(null, user);

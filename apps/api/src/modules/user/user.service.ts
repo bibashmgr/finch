@@ -8,11 +8,8 @@ import { UpdateProfileDto } from "@/modules/user/dtos/update-profile.dto";
 export class UserService {
   constructor(private readonly userRepository: UsersRepository) {}
 
-  async updateProfile(
-    currentUser: typeof usersTable.$inferSelect,
-    payload: UpdateProfileDto,
-  ) {
-    const user = await this.userRepository.update(currentUser.id, payload);
+  async updateProfile(id: string, payload: UpdateProfileDto) {
+    const [user] = await this.userRepository.update(id, payload);
     return user;
   }
 }

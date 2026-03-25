@@ -19,7 +19,7 @@ export class TokenService {
     private readonly tokenRepository: TokenRepository,
   ) {}
 
-  async generateToken(
+  private async generateToken(
     userId: string,
     expiresIn: JwtSignOptions["expiresIn"],
     type: TokenEnum,
@@ -51,7 +51,7 @@ export class TokenService {
       TokenEnum.REFRESH,
     );
 
-    await this.tokenRepository.saveRefreshToken({
+    await this.tokenRepository.create({
       userId,
       token: refreshToken,
       expiresAt: refreshTokenExpiration,
@@ -62,7 +62,7 @@ export class TokenService {
 
   async revokeRefreshTokens(token: string) {
     const existingRefreshToken =
-      await this.tokenRepository.findRefreshToken(token);
+      await this.tokenRepository.findOneByToken(token);
 
     if (!existingRefreshToken) {
       throw new NotFoundException("Refresh token not found");
@@ -76,14 +76,14 @@ export class TokenService {
       throw new UnauthorizedException("Refresh token already expired");
     }
 
-    await this.tokenRepository.updateRefreshToken(existingRefreshToken.id, {
+    await this.tokenRepository.update(existingRefreshToken.id, {
       revokedAt: new Date(),
     });
   }
 
   async rotateRefreshTokens(token: string | undefined) {
     const existingRefreshToken =
-      await this.tokenRepository.findRefreshToken(token);
+      await this.tokenRepository.findOneByToken(token);
 
     if (!existingRefreshToken) {
       throw new NotFoundException("Refresh token not found");
@@ -97,7 +97,7 @@ export class TokenService {
       throw new UnauthorizedException("Refresh token already expired");
     }
 
-    await this.tokenRepository.updateRefreshToken(existingRefreshToken.id, {
+    await this.tokenRepository.update(existingRefreshToken.id, {
       revokedAt: new Date(),
     });
 

@@ -1,6 +1,8 @@
 import {
   Controller,
   FileTypeValidator,
+  HttpCode,
+  HttpStatus,
   MaxFileSizeValidator,
   ParseFilePipe,
   Post,
@@ -18,6 +20,7 @@ export class AssetController {
   constructor(private readonly assetService: AssetService) {}
 
   @Post("upload")
+  @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(FileInterceptor("file"))
   updateProfileAvatar(
     @CurrentUser() user: typeof usersTable.$inferSelect,

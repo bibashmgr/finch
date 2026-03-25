@@ -12,7 +12,7 @@ export class AssetService {
 
   async uploadAsset(userId: string, file: Express.Multer.File) {
     const response = await this.cloudinaryService.upload(file);
-    const asset = await this.assetRepository.create({
+    const [asset] = await this.assetRepository.create({
       userId,
       publicId: response.public_id,
       assetType: response.resource_type,
@@ -28,16 +28,15 @@ export class AssetService {
   }
 
   async deleteAsset(id: string) {
-    const asset = await this.assetRepository.findById(id);
+    const asset = await this.assetRepository.findOneById(id);
 
     if (!asset) {
       throw new NotFoundException("Asset not found");
     }
 
     await this.cloudinaryService.delete(asset.publicId);
-    const deletedAsset = await this.assetRepository.update(asset.id, {
+    await this.assetRepository.update(asset.id, {
       deletedAt: new Date(),
     });
-    return deletedAsset;
   }
 }

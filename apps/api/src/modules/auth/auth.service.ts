@@ -31,16 +31,20 @@ export class AuthService {
     await this.otpService.verifyOtpCode(email, code);
 
     let user: typeof usersTable.$inferSelect;
-    let account = await this.accountRepository.findByProvider("email", email);
+    let account = await this.accountRepository.findOneByProvider(
+      "email",
+      email,
+    );
 
     if (!account) {
-      user = await this.userRepository.findByEmail(email);
+      user = await this.userRepository.findOneByEmail(email);
 
       if (!user) {
-        user = await this.userRepository.create({
+        const [newUser] = await this.userRepository.create({
           email,
           name: email.split("@")[0],
         });
+        user = newUser;
       }
 
       await this.accountRepository.create({
@@ -49,7 +53,7 @@ export class AuthService {
         providerAccountId: email,
       });
     } else {
-      user = await this.userRepository.findById(account.userId);
+      user = await this.userRepository.findOneById(account.userId);
     }
 
     return await this.tokenService.issueAuthTokens(user.id);

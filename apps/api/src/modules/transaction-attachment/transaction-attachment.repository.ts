@@ -8,21 +8,17 @@ import { transactionAttachmentsTable } from "@/modules/db/schema";
 export class TransactionAttachmentRepository {
   constructor(@InjectDb() private readonly db: DB) {}
 
-  async create(payload: typeof transactionAttachmentsTable.$inferInsert) {
-    const [transaction] = await this.db
+  create(payload: typeof transactionAttachmentsTable.$inferInsert) {
+    return this.db
       .insert(transactionAttachmentsTable)
       .values(payload)
       .returning();
-    return transaction;
   }
 
-  async createMany(
-    payload: (typeof transactionAttachmentsTable.$inferInsert)[],
-  ) {
-    const [transaction] = await this.db
+  createMany(payload: (typeof transactionAttachmentsTable.$inferInsert)[]) {
+    return this.db
       .insert(transactionAttachmentsTable)
       .values(payload)
       .returning();
-    return transaction;
   }
 }

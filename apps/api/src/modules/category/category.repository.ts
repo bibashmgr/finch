@@ -4,22 +4,20 @@ import { and, count, desc, eq } from "drizzle-orm";
 import { DB } from "@/modules/db/client";
 import { InjectDb } from "@/modules/db/db.provider";
 import { categoriesTable } from "@/modules/db/schema";
-import { GetCategoriesFilters } from "@/modules/category/entities/get-categories-filters.type";
-import { GetCategoriesOptions } from "@/modules/category/entities/get-categories-options.type";
+import { CategoryTypeEnum } from "@/modules/category/entities/category-type.enum";
 
 @Injectable()
 export class CategoryRepository {
   constructor(@InjectDb() private readonly db: DB) {}
 
-  async create(payload: typeof categoriesTable.$inferInsert) {
-    const [category] = await this.db
-      .insert(categoriesTable)
-      .values(payload)
-      .returning();
-    return category;
+  create(payload: typeof categoriesTable.$inferInsert) {
+    return this.db.insert(categoriesTable).values(payload).returning();
   }
 
-  async findAll(filters: GetCategoriesFilters, options: GetCategoriesOptions) {
+  async findAllByUserId(
+    filters: { userId: string; type?: CategoryTypeEnum },
+    options: { limit?: number; page?: number },
+  ) {
     const conditions = [];
 
     if (filters.userId) {
@@ -56,24 +54,17 @@ export class CategoryRepository {
     };
   }
 
-  async findById(id: string) {
-    const [category] = await this.db
-      .select()
-      .from(categoriesTable)
-      .where(eq(categoriesTable.id, id))
-      .limit(1);
-    return category;
+  findOneById(id: string) {
+    return this.db.query.categoriesTable.findFirst({
+      where: eq(categoriesTable.id, id),
+    });
   }
 
-  async updateById(
-    id: string,
-    payload: Partial<typeof categoriesTable.$inferInsert>,
-  ) {
-    const [category] = await this.db
+  update(id: string, payload: Partial<typeof categoriesTable.$inferInsert>) {
+    return this.db
       .update(categoriesTable)
       .set({ ...payload })
       .where(eq(categoriesTable.id, id))
       .returning();
-    return category;
   }
 }

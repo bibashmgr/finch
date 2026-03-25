@@ -9,32 +9,21 @@ import { refreshTokensTable } from "@/modules/db/schema";
 export class TokenRepository {
   constructor(@InjectDb() private readonly db: DB) {}
 
-  async saveRefreshToken(payload: typeof refreshTokensTable.$inferInsert) {
-    const [refreshToken] = await this.db
-      .insert(refreshTokensTable)
-      .values(payload)
-      .returning();
-    return refreshToken;
+  create(payload: typeof refreshTokensTable.$inferInsert) {
+    return this.db.insert(refreshTokensTable).values(payload).returning();
   }
 
-  async findRefreshToken(token: string) {
-    const [refreshToken] = await this.db
-      .select()
-      .from(refreshTokensTable)
-      .where(eq(refreshTokensTable.token, token))
-      .limit(1);
-    return refreshToken;
+  findOneByToken(token: string) {
+    return this.db.query.refreshTokensTable.findFirst({
+      where: eq(refreshTokensTable.token, token),
+    });
   }
 
-  async updateRefreshToken(
-    id: string,
-    payload: Partial<typeof refreshTokensTable.$inferInsert>,
-  ) {
-    const [refreshToken] = await this.db
+  update(id: string, payload: Partial<typeof refreshTokensTable.$inferInsert>) {
+    return this.db
       .update(refreshTokensTable)
       .set({ ...payload })
       .where(eq(refreshTokensTable.id, id))
       .returning();
-    return refreshToken;
   }
 }

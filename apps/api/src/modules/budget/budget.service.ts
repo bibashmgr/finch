@@ -39,7 +39,6 @@ export class BudgetService {
     }
 
     // TODO: check category is of type expense
-
     const [budget] = await this.budgetRepository.create(
       userId,
       dto.categoryId,

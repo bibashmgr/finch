@@ -23,7 +23,7 @@ export class OtpService {
       Date.now() + ms(this.configService.get("OTP_EXPIRES_IN")),
     );
 
-    await this.otpRepository.saveVerificationCode({
+    await this.otpRepository.create({
       codeHash,
       email,
       expiresAt,
@@ -33,7 +33,7 @@ export class OtpService {
   }
 
   async verifyOtpCode(email: string, code: string) {
-    const records = await this.otpRepository.findValidVerificationCodes(email);
+    const records = await this.otpRepository.findAllByEmail(email);
 
     let record: (typeof records)[number] | undefined;
 
@@ -47,7 +47,7 @@ export class OtpService {
 
     if (!record) throw new UnauthorizedException("Invalid verification code");
 
-    await this.otpRepository.updateVerificationCode(record.id, {
+    await this.otpRepository.update(record.id, {
       consumedAt: new Date(),
     });
   }

@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, HttpCode, HttpStatus, Query } from "@nestjs/common";
 
 import { usersTable } from "@/modules/db/schema";
 import { DashboardService } from "@/modules/dashboard/dashboard.service";
@@ -10,13 +10,15 @@ export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Get("/summary")
-  getDashboardSummary(
-    @Query() query: GetDashboardSummaryDto,
+  @HttpCode(HttpStatus.OK)
+  getSummary(
+    @Query() { startDate, endDate }: GetDashboardSummaryDto,
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
-    return this.dashboardService.getDashboardSummary({
+    return this.dashboardService.getSummary({
       userId: currentUser.id,
-      ...query,
+      startDate,
+      endDate,
     });
   }
 }

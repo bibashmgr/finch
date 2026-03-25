@@ -4,32 +4,30 @@ import { and, asc, count, desc, eq, gte, lte, sql, sum } from "drizzle-orm";
 import { DB } from "@/modules/db/client";
 import { InjectDb } from "@/modules/db/db.provider";
 import { categoriesTable, transactionsTable } from "@/modules/db/schema";
-import { GetTransactionsOptions } from "@/modules/transaction/entities/get-transactions-options.type";
-import { GetTransactionsFilters } from "@/modules/transaction/entities/get-transactions-filters.type";
+import { CategoryTypeEnum } from "../category/entities/category-type.enum";
 
 @Injectable()
 export class TransactionRepository {
   constructor(@InjectDb() private readonly db: DB) {}
 
-  async create(payload: typeof transactionsTable.$inferInsert) {
-    const [transaction] = await this.db
-      .insert(transactionsTable)
-      .values(payload)
-      .returning();
-    return transaction;
+  create(payload: typeof transactionsTable.$inferInsert) {
+    return this.db.insert(transactionsTable).values(payload).returning();
   }
 
   async findAll(
-    filters: GetTransactionsFilters,
-    options: GetTransactionsOptions,
+    filters: {
+      userId: string;
+      startDate?: string;
+      endDate?: string;
+      type?: CategoryTypeEnum;
+    },
+    options: { limit?: number; page?: number; sortBy?: string },
   ) {
     const conditions = [];
 
-    if (filters.userId) {
-      conditions.push(eq(transactionsTable.userId, filters.userId));
-    }
+    conditions.push(eq(transactionsTable.userId, filters.userId));
 
-    if (filters.startDate && filters.endDate) {
+    if (filters.startDate) {
       conditions.push(
         gte(transactionsTable.issuedAt, new Date(filters.startDate)),
       );
@@ -121,52 +119,41 @@ export class TransactionRepository {
     };
   }
 
-  async findById(id: string) {
-    const [transaction] = await this.db
-      .select()
-      .from(transactionsTable)
-      .where(eq(transactionsTable.id, id))
-      .limit(1);
-    return transaction;
+  findOneById(id: string) {
+    return this.db.query.transactionsTable.findFirst({
+      where: eq(transactionsTable.id, id),
+    });
   }
 
-  async findByIdWithAttachments(id: string) {
-    const transaction = await this.db.query.transactionsTable.findFirst({
+  findOneByIdWithAttachments(id: string) {
+    return this.db.query.transactionsTable.findFirst({
       where: eq(transactionsTable.id, id),
       with: {
         attachments: true,
       },
     });
-
-    return transaction;
   }
 
-  async findByIdWithDetails(id: string) {
-    const transaction = await this.db.query.transactionsTable.findFirst({
+  findOneByIdWithCategoryAndAttachments(id: string) {
+    return this.db.query.transactionsTable.findFirst({
       where: eq(transactionsTable.id, id),
       with: {
         attachments: true,
         category: true,
       },
     });
-
-    return transaction;
   }
 
-  async updateById(
-    id: string,
-    payload: Partial<typeof transactionsTable.$inferInsert>,
-  ) {
-    const [transaction] = await this.db
+  update(id: string, payload: Partial<typeof transactionsTable.$inferInsert>) {
+    return this.db
       .update(transactionsTable)
       .set({ ...payload })
       .where(eq(transactionsTable.id, id))
       .returning();
-    return transaction;
   }
 
-  async getTotalIncome(userId: string, startDate: Date, endDate: Date) {
-    const [totalIncomeResult] = await this.db
+  getTotalIncome(userId: string, startDate: Date, endDate: Date) {
+    return this.db
       .select({ total: sum(transactionsTable.amount) })
       .from(transactionsTable)
       .innerJoin(
@@ -181,11 +168,10 @@ export class TransactionRepository {
           lte(transactionsTable.issuedAt, endDate),
         ),
       );
-    return totalIncomeResult;
   }
 
-  async getTotalExpense(userId: string, startDate: Date, endDate: Date) {
-    const [totalExpenseResult] = await this.db
+  getTotalExpense(userId: string, startDate: Date, endDate: Date) {
+    return this.db
       .select({ total: sum(transactionsTable.amount) })
       .from(transactionsTable)
       .innerJoin(
@@ -200,6 +186,5 @@ export class TransactionRepository {
           lte(transactionsTable.issuedAt, endDate),
         ),
       );
-    return totalExpenseResult;
   }
 }
