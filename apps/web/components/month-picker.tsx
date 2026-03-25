@@ -45,6 +45,10 @@ export function MonthPicker({
   invalid = false,
   disabled = false,
 }: MonthPickerProps) {
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth();
+
   const [year, setYear] = React.useState<number>(
     value ? value.getFullYear() : new Date().getFullYear(),
   );
@@ -126,6 +130,9 @@ export function MonthPicker({
           <div className="grid grid-cols-4 gap-2">
             {months.map((item) => {
               const isSelected = item.index === month;
+              const isFuture =
+                year > currentYear ||
+                (year === currentYear && item.index > currentMonth);
 
               return (
                 <Button
@@ -134,6 +141,7 @@ export function MonthPicker({
                   size="sm"
                   className="px-2 cursor-pointer"
                   onClick={() => handleSelectMonth(item.index)}
+                  disabled={isFuture}
                 >
                   {item.short}
                 </Button>
