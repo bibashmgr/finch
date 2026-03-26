@@ -17,9 +17,9 @@ export class TransactionRepository {
   async findAll(
     filters: {
       userId: string;
+      type?: CategoryTypeEnum;
       startDate?: string;
       endDate?: string;
-      type?: CategoryTypeEnum;
     },
     options: { limit?: number; page?: number; sortBy?: string },
   ) {
@@ -71,7 +71,10 @@ export class TransactionRepository {
     }
 
     if (orderConditions.length === 0) {
-      orderConditions.push(desc(transactionsTable.issuedAt));
+      orderConditions.push(
+        desc(transactionsTable.issuedAt),
+        desc(transactionsTable.createdAt),
+      );
     }
 
     const results = await this.db
@@ -106,7 +109,12 @@ export class TransactionRepository {
 
     const [{ totalCount }] = await this.db
       .select({ totalCount: count() })
-      .from(transactionsTable);
+      .from(transactionsTable)
+      .innerJoin(
+        categoriesTable,
+        eq(transactionsTable.categoryId, categoriesTable.id),
+      )
+      .where(and(...conditions));
 
     const totalPages = Math.ceil(totalCount / limit);
 

@@ -25,12 +25,14 @@ export class TransactionController {
   @Get()
   @HttpCode(HttpStatus.OK)
   findAll(
-    @Query() { limit, page, sortBy, endDate, startDate }: GetTransactionsDto,
+    @Query()
+    { limit, page, sortBy, type, endDate, startDate }: GetTransactionsDto,
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
     return this.transactionService.findAll(
       {
         userId: currentUser.id,
+        type,
         startDate,
         endDate,
       },

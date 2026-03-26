@@ -22,9 +22,9 @@ export class TransactionService {
   async findAll(
     filters: {
       userId: string;
+      type?: CategoryTypeEnum;
       startDate?: string;
       endDate?: string;
-      type?: CategoryTypeEnum;
     },
     options: { limit?: number; page?: number; sortBy?: string },
   ) {

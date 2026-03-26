@@ -41,7 +41,8 @@ export class CategoryRepository {
 
     const [{ totalCount }] = await this.db
       .select({ totalCount: count() })
-      .from(categoriesTable);
+      .from(categoriesTable)
+      .where(and(...conditions));
 
     const totalPages = Math.ceil(totalCount / limit);
 

@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { and, count, desc, eq, sql } from "drizzle-orm";
 
-import { DB } from "@/modules/db/client";
-import { InjectDb } from "@/modules/db/db.provider";
 import {
   budgetsTable,
   categoriesTable,
   transactionsTable,
 } from "@/modules/db/schema";
+import { DB } from "@/modules/db/client";
+import { InjectDb } from "@/modules/db/db.provider";
 
 @Injectable()
 export class BudgetRepository {
@@ -72,7 +72,19 @@ export class BudgetRepository {
 
     const [{ totalCount }] = await this.db
       .select({ totalCount: count() })
-      .from(budgetsTable);
+      .from(budgetsTable)
+      .innerJoin(
+        categoriesTable,
+        eq(budgetsTable.categoryId, categoriesTable.id),
+      )
+      .leftJoin(
+        transactionsTable,
+        and(
+          eq(transactionsTable.categoryId, budgetsTable.categoryId),
+          eq(transactionsTable.userId, budgetsTable.userId),
+        ),
+      )
+      .where(and(...conditions));
 
     const totalPages = Math.ceil(totalCount / limit);
 
