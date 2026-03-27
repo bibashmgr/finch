@@ -31,7 +31,7 @@ export class CategoryRepository {
     const { limit = 10, page = 1 } = options;
     const offset = (page - 1) * limit;
 
-    const results = await this.db
+    const resultsQuery = this.db
       .select()
       .from(categoriesTable)
       .where(and(...conditions))
@@ -39,9 +39,15 @@ export class CategoryRepository {
       .limit(limit)
       .offset(offset);
 
-    const [{ totalCount }] = await this.db
+    const countQuery = this.db
       .select({ totalCount: count() })
-      .from(categoriesTable);
+      .from(categoriesTable)
+      .where(and(...conditions));
+
+    const [results, [{ totalCount }]] = await Promise.all([
+      resultsQuery,
+      countQuery,
+    ]);
 
     const totalPages = Math.ceil(totalCount / limit);
 

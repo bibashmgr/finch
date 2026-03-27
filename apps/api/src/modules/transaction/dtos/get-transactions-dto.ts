@@ -25,11 +25,11 @@ export class GetTransactionsDto {
 
   @IsDateString()
   @IsOptional()
-  startDate: string;
+  startDate?: string;
 
   @IsDateString()
   @IsOptional()
-  endDate: string;
+  endDate?: string;
 
   @IsEnum(CategoryTypeEnum)
   @IsOptional()

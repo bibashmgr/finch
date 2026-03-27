@@ -13,35 +13,69 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@repo/ui/components/empty";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from "@repo/ui/components/pagination";
 import { Button } from "@repo/ui/components/button";
 import { BudgetCard } from "@/components/budget-card";
 import { Skeleton } from "@repo/ui/components/skeleton";
+
+import { cn } from "@repo/ui/lib/utils";
 import { useGetBudgetsQuery } from "@/store/apis/budget-api";
 
 export function BudgetList() {
-  const [selectedMonth, setSelectedMonth] = React.useState<Date>(new Date());
+  const [queryOptions, setQueryOptions] = React.useState({
+    page: 1,
+    limit: 10,
+    month: new Date(),
+  });
 
-  const parsedMonth = React.useMemo(() => {
-    const parsed = selectedMonth;
+  const query = React.useMemo(() => {
+    const params = new URLSearchParams();
+
+    params.set("page", String(queryOptions.page));
+    params.set("limit", String(queryOptions.limit));
+
+    const parsed = queryOptions.month;
     parsed.setDate(1);
     parsed.setHours(0, 0, 0, 0);
-    return format(selectedMonth, "yyyy-MM-dd");
-  }, [selectedMonth]);
+    params.set("month", format(parsed, "yyyy-MM-dd"));
 
-  const { data, isLoading, isFetching, isSuccess } = useGetBudgetsQuery(
-    `month=${parsedMonth}`,
-  );
+    return params.toString();
+  }, [queryOptions]);
+
+  const { data, isLoading, isSuccess } = useGetBudgetsQuery(query);
 
   const handleChangeMonth = React.useCallback(
     (action: "increase" | "decrease") => {
       if (action === "increase") {
-        setSelectedMonth((prev) => addMonths(prev, 1));
+        setQueryOptions((prev) => ({
+          ...prev,
+          page: 1,
+          month: addMonths(prev.month, 1),
+        }));
       } else {
-        setSelectedMonth((prev) => subMonths(prev, 1));
+        setQueryOptions((prev) => ({
+          ...prev,
+          page: 1,
+          month: subMonths(prev.month, 1),
+        }));
       }
     },
     [],
   );
+
+  const handlePagination = React.useCallback((action: "next" | "previous") => {
+    if (action === "next") {
+      setQueryOptions((prev) => ({ ...prev, page: prev.page + 1 }));
+    } else {
+      setQueryOptions((prev) => ({ ...prev, page: prev.page - 1 }));
+    }
+  }, []);
 
   return (
     <div className="space-y-4">
@@ -56,7 +90,7 @@ export function BudgetList() {
         </Button>
 
         <p className="text-lg font-bold">
-          {format(selectedMonth, "MMMM yyyy")}
+          {format(queryOptions.month, "MMMM yyyy")}
         </p>
 
         <Button
@@ -69,7 +103,7 @@ export function BudgetList() {
         </Button>
       </div>
 
-      {isFetching ? (
+      {isLoading ? (
         <div className="space-y-4">
           <div className="flex flex-row gap-2 justify-between items-center">
             <Skeleton className="w-20 h-9" />
@@ -133,6 +167,35 @@ export function BudgetList() {
               );
             })}
           </div>
+
+          {data.totalPages > 1 && (
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    aria-disabled={queryOptions.page === 1}
+                    className={cn(
+                      "cursor-pointer",
+                      queryOptions.page === 1 &&
+                        "pointer-events-none opacity-50",
+                    )}
+                    onClick={() => handlePagination("previous")}
+                  />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext
+                    aria-disabled={queryOptions.page === data.totalPages}
+                    className={cn(
+                      "cursor-pointer",
+                      queryOptions.page === data.totalPages &&
+                        "pointer-events-none opacity-50",
+                    )}
+                    onClick={() => handlePagination("next")}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          )}
         </div>
       )}
     </div>
