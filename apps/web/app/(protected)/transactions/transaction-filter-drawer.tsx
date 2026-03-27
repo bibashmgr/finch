@@ -57,6 +57,11 @@ export function TransactionFilterDrawer({
       page: 1,
       limit: 10,
     });
+    setFilters({
+      type: "",
+      date: new Date(),
+      sortBy: "",
+    });
     handleChangeDrawer(false);
   }, [handleChangeDrawer, handleChangeQueryOptions]);
 
