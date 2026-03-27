@@ -34,11 +34,11 @@ export function ReportDetailSortDrawer({
 
   const handleResetSorting = React.useCallback(() => {
     handleChangeQueryOptions({
-      sortBy: "",
+      sortBy: "newest",
       page: 1,
       limit: 10,
     });
-    setSortBy("");
+    setSortBy("newest");
     handleChangeDrawer(false);
   }, [handleChangeDrawer, handleChangeQueryOptions]);
 

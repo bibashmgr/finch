@@ -53,14 +53,14 @@ export function TransactionFilterDrawer({
     handleChangeQueryOptions({
       type: "",
       date: new Date(),
-      sortBy: "",
+      sortBy: "newest",
       page: 1,
       limit: 10,
     });
     setFilters({
       type: "",
       date: new Date(),
-      sortBy: "",
+      sortBy: "newest",
     });
     handleChangeDrawer(false);
   }, [handleChangeDrawer, handleChangeQueryOptions]);
