@@ -32,7 +32,7 @@ export class BudgetRepository {
     const { limit = 10, page = 1 } = options;
     const offset = (page - 1) * limit;
 
-    const results = await this.db
+    const resultsQuery = this.db
       .select({
         id: budgetsTable.id,
         amount: budgetsTable.amount,
@@ -70,21 +70,15 @@ export class BudgetRepository {
       .limit(limit)
       .offset(offset);
 
-    const [{ totalCount }] = await this.db
+    const countQuery = this.db
       .select({ totalCount: count() })
       .from(budgetsTable)
-      .innerJoin(
-        categoriesTable,
-        eq(budgetsTable.categoryId, categoriesTable.id),
-      )
-      .leftJoin(
-        transactionsTable,
-        and(
-          eq(transactionsTable.categoryId, budgetsTable.categoryId),
-          eq(transactionsTable.userId, budgetsTable.userId),
-        ),
-      )
       .where(and(...conditions));
+
+    const [results, [{ totalCount }]] = await Promise.all([
+      resultsQuery,
+      countQuery,
+    ]);
 
     const totalPages = Math.ceil(totalCount / limit);
 

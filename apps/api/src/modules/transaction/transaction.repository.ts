@@ -77,7 +77,7 @@ export class TransactionRepository {
       );
     }
 
-    const results = await this.db
+    const resultsQuery = this.db
       .select({
         id: transactionsTable.id,
         userId: transactionsTable.userId,
@@ -107,7 +107,7 @@ export class TransactionRepository {
       .limit(limit)
       .offset(offset);
 
-    const [{ totalCount }] = await this.db
+    const countQuery = this.db
       .select({ totalCount: count() })
       .from(transactionsTable)
       .innerJoin(
@@ -115,6 +115,11 @@ export class TransactionRepository {
         eq(transactionsTable.categoryId, categoriesTable.id),
       )
       .where(and(...conditions));
+
+    const [results, [{ totalCount }]] = await Promise.all([
+      resultsQuery,
+      countQuery,
+    ]);
 
     const totalPages = Math.ceil(totalCount / limit);
 
