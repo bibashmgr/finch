@@ -13,17 +13,9 @@ import {
   DropdownMenuTrigger,
 } from "@repo/ui/components/dropdown-menu";
 import { Button } from "@repo/ui/components/button";
-import { TransactionDeleteDrawer } from "./transaction-delete-drawer";
 
 export function TransactionDetailAction() {
   const params = useParams<{ transactionId: string }>();
-
-  const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] =
-    React.useState<boolean>(false);
-
-  const handleDeleteDrawer = React.useCallback((value: boolean) => {
-    setIsDeleteDrawerOpen(value);
-  }, []);
 
   return (
     <>
@@ -42,17 +34,9 @@ export function TransactionDetailAction() {
             >
               <DropdownMenuItem>Edit</DropdownMenuItem>
             </Link>
-            <DropdownMenuItem onClick={() => handleDeleteDrawer(true)}>
-              Delete
-            </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <TransactionDeleteDrawer
-        isOpen={isDeleteDrawerOpen}
-        handleOpen={handleDeleteDrawer}
-      />
     </>
   );
 }
