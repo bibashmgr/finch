@@ -10,7 +10,6 @@ import {
   DrawerTitle,
 } from "@repo/ui/components/drawer";
 import { Button } from "@repo/ui/components/button";
-import { MonthPicker } from "@/components/month-picker";
 
 import { QueryOptions } from "./report-detail";
 
@@ -39,6 +38,7 @@ export function ReportDetailSortDrawer({
       page: 1,
       limit: 10,
     });
+    setSortBy("");
     handleChangeDrawer(false);
   }, [handleChangeDrawer, handleChangeQueryOptions]);
 
