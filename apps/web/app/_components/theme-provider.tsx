@@ -10,7 +10,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return (
     <NextThemesProvider
       attribute="class"
-      defaultTheme={setting?.theme ?? "system"}
+      defaultTheme={setting ? setting.theme : "system"}
       enableSystem
       disableTransitionOnChange
       enableColorScheme
