@@ -1,3 +1,4 @@
+import helmet from "helmet";
 import { Logger } from "nestjs-pino";
 import cookieParser from "cookie-parser";
 import { NestFactory } from "@nestjs/core";
@@ -18,6 +19,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(createValidationConfig());
 
+  app.use(helmet());
   app.use(cookieParser());
 
   const configService = app.get(ConfigService);
