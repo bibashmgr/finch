@@ -36,8 +36,8 @@ export function ThemeSettingForm() {
 
   async function handleFormSumit(values: ThemeSettingFormValues) {
     try {
-      const setting = await updateThemeSetting({ theme: values.mode }).unwrap();
-      setTheme(setting.theme);
+      await updateThemeSetting({ theme: values.mode }).unwrap();
+      setTheme(values.mode);
       toast.success("Update setting successfully");
     } catch {
       toast.error("Failed to update setting");

@@ -21,8 +21,8 @@ export function ThemeToggle() {
 
   async function handleThemeSetting(theme: string) {
     try {
-      const setting = await updateThemeSetting({ theme }).unwrap();
-      setTheme(setting.theme);
+      await updateThemeSetting({ theme }).unwrap();
+      setTheme(theme);
     } catch {
       toast.error("Failed to update theme");
     }
