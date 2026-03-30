@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { ChartPie, InfoIcon } from "lucide-react";
 import { formatDistanceToNowStrict } from "date-fns";
 
@@ -13,12 +14,27 @@ type NotificationItemProps = {
 };
 
 export function NotificationItem({ notification }: NotificationItemProps) {
+  const router = useRouter();
   const [markAsRead] = useMarkOneAsReadMutation();
 
-  async function handleMarkAsRead() {
+  async function handleClick() {
     try {
-      if (notification.readAt) return;
-      await markAsRead(notification.id).unwrap();
+      if (notification.readAt === null) {
+        await markAsRead(notification.id).unwrap();
+      }
+
+      switch (notification.type) {
+        case NotificationTypeEnum.BUDGET_EXCEEDED:
+          router.push(`/budgets/${notification.budgetId}`);
+          break;
+
+        case NotificationTypeEnum.BUDGET_THRESHOLD:
+          router.push(`/budgets/${notification.budgetId}`);
+          break;
+
+        default:
+          break;
+      }
     } catch (error) {
       console.log(error);
     }
@@ -46,7 +62,7 @@ export function NotificationItem({ notification }: NotificationItemProps) {
         "flex justify-between gap-4 border-b py-3 px-3 cursor-pointer",
         notification.readAt === null && "bg-zinc-100 dark:bg-zinc-900",
       )}
-      onClick={handleMarkAsRead}
+      onClick={handleClick}
     >
       <div className="flex gap-3 flex-1">
         {getIcon(notification.type)}
