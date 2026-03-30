@@ -119,6 +119,18 @@
     --font-sans: var(--font-sans);
     --font-mono: var(--font-mono);
     --font-serif: var(--font-serif);
+
+    --animate-spin-around: spin-around 0.8s linear infinite;
+    
+    @keyframes spin-around {
+        0% {
+            transform: rotate(-90deg);
+        }
+
+        100% {
+            transform: rotate(270deg);
+        }
+    }
 }
 
 @layer base {
