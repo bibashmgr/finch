@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -10,6 +11,8 @@ import { TransactionRepository } from "@/modules/transaction/transaction.reposit
 import { CreateTransactionDto } from "@/modules/transaction/dtos/create-transaction.dto";
 import { UpdateTransactionByIdDto } from "@/modules/transaction/dtos/update-transaction-by-id.dto";
 import { TransactionAttachmentRepository } from "@/modules/transaction-attachment/transaction-attachment.repository";
+import { CategoryRepository } from "@/modules/category/category.repository";
+import { NotificationService } from "@/modules/notification/notification.service";
 
 @Injectable()
 export class TransactionService {
@@ -17,6 +20,8 @@ export class TransactionService {
     private readonly transactionRepository: TransactionRepository,
     private readonly settingRepository: SettingRepository,
     private readonly transactionAttachmentRepository: TransactionAttachmentRepository,
+    private readonly categoryRepository: CategoryRepository,
+    private readonly notificationsService: NotificationService,
   ) {}
 
   async findAll(
@@ -43,6 +48,14 @@ export class TransactionService {
 
     const { issuedAt, attachments, ...otherDto } = dto;
 
+    const existingCategory = await this.categoryRepository.findOneById(
+      otherDto.categoryId,
+    );
+
+    if (!existingCategory) {
+      throw new BadRequestException("Category is invalid");
+    }
+
     const [transaction] = await this.transactionRepository.create({
       userId,
       currency: userSetting.currency,
@@ -65,14 +78,24 @@ export class TransactionService {
 
       return {
         ...attachedTransaction,
+        category: existingCategory,
         attachments: attachedTransaction.attachments.map((a) => a.url),
       };
     }
 
-    return {
+    const createdTransaction = {
       ...transaction,
+      category: existingCategory,
       attachments: [],
     };
+
+    if (existingCategory.type === "expense") {
+      this.notificationsService
+        .checkBudgetAndNotify(createdTransaction)
+        .catch((err) => console.error("Failed to send alerts for budget", err));
+    }
+
+    return createdTransaction;
   }
 
   async findOne(transactionId: string, userId: string) {

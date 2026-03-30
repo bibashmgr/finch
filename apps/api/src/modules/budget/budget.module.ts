@@ -8,5 +8,6 @@ import { BudgetRepository } from "@/modules/budget/budget.repository";
   imports: [],
   controllers: [BudgetController],
   providers: [BudgetService, BudgetRepository],
+  exports: [BudgetRepository],
 })
 export class BudgetModule {}
