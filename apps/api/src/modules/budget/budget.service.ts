@@ -22,7 +22,16 @@ export class BudgetService {
   async findOne(id: string, userId: string) {
     const budget = await this.budgetRepository.findOneByIdAndUserId(id, userId);
     if (!budget) throw new NotFoundException("Budget not found");
-    return budget;
+
+    const [monthlySpentResult] = await this.budgetRepository.getMonthlySpend(
+      budget.userId,
+      budget.categoryId,
+      budget.month,
+    );
+    return {
+      ...budget,
+      spent: monthlySpentResult.total ?? "0",
+    };
   }
 
   async create(userId: string, dto: CreateBudgetDto) {
