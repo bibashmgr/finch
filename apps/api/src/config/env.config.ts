@@ -74,6 +74,9 @@ export const envSchema = z.object({
   APP_NAME: z.string().nonempty({
     message: "APP_NAME must not be empty",
   }),
+  SUPPORT_EMAIL: z.email({
+    message: "SUPPORT_EMAIL must be a valid email address",
+  }),
 });
 
 export type Env = z.infer<typeof envSchema>;
