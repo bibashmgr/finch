@@ -12,6 +12,7 @@ export default function BudgetEditPage() {
   return (
     <StackLayout pageTitle="Edit Budget" fallbackUrl="/budgets">
       <BudgetEditForm />
+      <div className="py-7" />
     </StackLayout>
   );
 }

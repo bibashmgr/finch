@@ -161,7 +161,7 @@ export function BudgetList() {
           <div className="flex flex-col gap-3">
             {data.results.map((budget) => {
               return (
-                <Link key={budget.id} href={`/budgets/${budget.id}/edit`}>
+                <Link key={budget.id} href={`/budgets/${budget.id}`}>
                   <BudgetCard budget={budget} />
                 </Link>
               );
