@@ -16,9 +16,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@repo/ui/components/empty";
-import { Badge } from "@repo/ui/components/badge";
-import { Button } from "@repo/ui/components/button";
-import { Skeleton } from "@repo/ui/components/skeleton";
 import {
   Pagination,
   PaginationContent,
@@ -26,6 +23,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@repo/ui/components/pagination";
+import { Badge } from "@repo/ui/components/badge";
+import { Button } from "@repo/ui/components/button";
+import { Skeleton } from "@repo/ui/components/skeleton";
 
 export function CategoryList() {
   const [pagination, setPagination] = React.useState({
