@@ -16,6 +16,7 @@ import { SettingModule } from "@/modules/setting/setting.module";
 import { CategoryModule } from "@/modules/category/category.module";
 import { DashboardModule } from "@/modules/dashboard/dashboard.module";
 import { TransactionModule } from "@/modules/transaction/transaction.module";
+import { NotificationModule } from "@/modules/notification/notification.module";
 
 import { createMailConfig } from "@/config/mail.config";
 import { createEnvConfig, Env } from "@/config/env.config";
@@ -54,6 +55,7 @@ import { createThrollerConfig } from "@/config/throttler.config";
     DashboardModule,
     ReportModule,
     BudgetModule,
+    NotificationModule,
   ],
   controllers: [],
   providers: [

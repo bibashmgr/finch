@@ -12,6 +12,7 @@ import {
   boolean,
   numeric,
   date,
+  jsonb,
 } from "drizzle-orm/pg-core";
 
 const usersTable = pgTable(
@@ -298,6 +299,52 @@ const budgetsTable = pgTable(
   ],
 );
 
+const notificationTypeEnum = pgEnum("notification_type", [
+  "budget_threshold",
+  "budget_exceeded",
+  "monthly_summary",
+  "tips_article",
+]);
+
+const notificationsTable = pgTable(
+  "notifications",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+
+    userId: uuid("user_id")
+      .references(() => usersTable.id, { onDelete: "cascade" })
+      .notNull(),
+
+    type: notificationTypeEnum("type").notNull(),
+    title: varchar("title", { length: 255 }).notNull(),
+    body: text("body").notNull(),
+
+    data: jsonb("data"),
+
+    categoryId: uuid("category_id").references(() => categoriesTable.id, {
+      onDelete: "set null",
+    }),
+    budgetId: uuid("budget_id").references(() => budgetsTable.id, {
+      onDelete: "set null",
+    }),
+    transactionId: uuid("transaction_id").references(
+      () => transactionsTable.id,
+      { onDelete: "set null" },
+    ),
+
+    readAt: timestamp("read_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    index("notifications_user_id_index").on(table.userId),
+    index("notifications_user_unread_index").on(table.userId, table.readAt),
+  ],
+);
+
 export {
   usersTable,
   accountProviderEnum,
@@ -316,4 +363,6 @@ export {
   transactionsTable,
   transactionAttachmentsTable,
   budgetsTable,
+  notificationTypeEnum,
+  notificationsTable,
 };

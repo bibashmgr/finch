@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { and, count, desc, eq, sql } from "drizzle-orm";
+import { and, count, desc, eq, gte, lt, sql, sum } from "drizzle-orm";
 
 import {
   budgetsTable,
@@ -8,6 +8,7 @@ import {
 } from "@/modules/db/schema";
 import { DB } from "@/modules/db/client";
 import { InjectDb } from "@/modules/db/db.provider";
+import { endOfMonth, startOfMonth } from "date-fns";
 
 @Injectable()
 export class BudgetRepository {
@@ -113,6 +114,25 @@ export class BudgetRepository {
         category: true,
       },
     });
+  }
+
+  getMonthlySpend(userId: string, categoryId: string, month: string) {
+    return this.db
+      .select({ total: sum(transactionsTable.amount) })
+      .from(transactionsTable)
+      .innerJoin(
+        categoriesTable,
+        eq(categoriesTable.id, transactionsTable.categoryId),
+      )
+      .where(
+        and(
+          eq(transactionsTable.userId, userId),
+          eq(transactionsTable.categoryId, categoryId),
+          eq(categoriesTable.type, "expense"),
+          gte(transactionsTable.issuedAt, startOfMonth(month)),
+          lt(transactionsTable.issuedAt, endOfMonth(month)),
+        ),
+      );
   }
 
   create(userId: string, categoryId: string, amount: string, month: string) {

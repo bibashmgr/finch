@@ -31,6 +31,7 @@
     "cookie-parser": "^1.4.7",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.45.1",
+    "handlebars": "^4.7.9",
     "helmet": "^8.1.0",
     "ms": "^2.1.3",
     "nanoid": "^3.3.4",

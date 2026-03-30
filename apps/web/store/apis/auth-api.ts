@@ -18,6 +18,16 @@ const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: [
+        "Profile",
+        "Setting",
+        "DashboardSummary",
+        "Report",
+        "Categories",
+        "Transactions",
+        "Budgets",
+        "Notifications",
+      ],
     }),
 
     logoutUser: builder.mutation<EmptyResponse, void>({
