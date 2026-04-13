@@ -87,11 +87,13 @@ export class ReportService {
   async getReports(
     userId: string,
     period: ReportPeriodEnum,
+    timezone: string,
   ): Promise<ReportItem[]> {
     const { since, truncation, labels } = this.buildPeriodConfig(period);
     const rows = await this.reportRepository.getGroupedTotals(
       userId,
       since,
+      timezone,
       truncation,
     );
     return this.mergeWithLabels(labels, rows);

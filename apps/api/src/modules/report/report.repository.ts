@@ -17,11 +17,19 @@ export interface ReportRow {
 export class ReportRepository {
   constructor(@InjectDb() private readonly db: DB) {}
 
-  getGroupedTotals(userId: string, since: Date, truncation: Truncation) {
+  getGroupedTotals(
+    userId: string,
+    since: Date,
+    timezone: string,
+    truncation: Truncation,
+  ) {
     const labelFormat =
       truncation === "day" ? "Day" : truncation === "month" ? "Month" : "YYYY";
 
-    const truncExpr = sql`date_trunc(${sql.raw(`'${truncation}'`)}, ${transactionsTable.issuedAt})`;
+    const truncExpr = sql`date_trunc(
+    ${sql.raw(`'${truncation}'`)},
+    ${transactionsTable.issuedAt} AT TIME ZONE ${sql.raw(`'UTC'`)} AT TIME ZONE ${sql.raw(`'${timezone}'`)}
+  )`;
 
     return this.db
       .select({

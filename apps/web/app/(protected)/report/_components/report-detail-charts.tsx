@@ -34,10 +34,16 @@ const chartConfig = {
 
 type ReportDetailChartsProps = {
   period: string;
+  timezone: string;
 };
 
-export function ReportDetailCharts({ period }: ReportDetailChartsProps) {
-  const { data, isLoading, isSuccess } = useGetReportsQuery(`period=${period}`);
+export function ReportDetailCharts({
+  period,
+  timezone,
+}: ReportDetailChartsProps) {
+  const { data, isLoading, isSuccess } = useGetReportsQuery(
+    `period=${period}&timezone=${timezone}`,
+  );
 
   if (isLoading) {
     return <Skeleton className="w-full h-76" />;

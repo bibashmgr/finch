@@ -12,9 +12,9 @@ export class ReportController {
   @Get()
   @HttpCode(HttpStatus.OK)
   getReports(
-    @Query() { period }: GetReportsDto,
+    @Query() { period, timezone }: GetReportsDto,
     @CurrentUser() currentUser: typeof usersTable.$inferSelect,
   ) {
-    return this.reportService.getReports(currentUser.id, period);
+    return this.reportService.getReports(currentUser.id, period, timezone);
   }
 }
