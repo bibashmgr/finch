@@ -10,6 +10,7 @@ export type QueryOptions = {
   page: number;
   limit: number;
   period: string;
+  timezone: string;
   sortBy: string;
 };
 
@@ -18,6 +19,7 @@ export function ReportDetail() {
     page: 1,
     limit: 10,
     period: "week",
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     sortBy: "newest",
   });
 
@@ -43,7 +45,10 @@ export function ReportDetail() {
         </TabsList>
       </Tabs>
 
-      <ReportDetailCharts period={queryOptions.period} />
+      <ReportDetailCharts
+        period={queryOptions.period}
+        timezone={queryOptions.timezone}
+      />
       <ReportDetailList
         queryOptions={queryOptions}
         handleChangeQueryOptions={handleChangeQueryOptions}
